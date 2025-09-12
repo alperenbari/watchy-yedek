@@ -1,0 +1,9 @@
+.watchy-hero {
+  background: url('../assets/hero-top-exact.png') center/cover no-repeat;
+  padding: 120px 20px 100px;
+  text-align: center;
+  color: white;
+  font-family: 'Georgia', serif;
+  background-size: cover;
+  background-position: center;
+}

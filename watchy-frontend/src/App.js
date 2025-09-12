@@ -6,6 +6,9 @@ import DecadeSelector from './components/DecadeSelector';
 import YearSelector from './components/YearSelector';
 import ResultList from './components/ResultList';
 import { useSearch } from './hooks/useSearch';
+import HeroBanner from './components/HeroBanner';
+
+
 
 function App() {
   const {
@@ -34,6 +37,7 @@ function App() {
 
   return (
     <div className="App" style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh', padding: '20px' }}>
+      <HeroBanner title="Tüm platformlarda Türk sinemasının en iyileri" />
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -42,9 +46,6 @@ function App() {
         borderBottom: '1px solid #333',
         paddingBottom: '16px'
       }}>
-        <div style={{ flex: 1 }}>
-          <img src="/logo.png" alt="Logo" style={{ height: '50px' }} />
-        </div>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
           <SearchBar query={query} setQuery={setQuery} onSearch={handleSearch} />
         </div>

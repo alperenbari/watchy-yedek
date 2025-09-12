@@ -1,0 +1,29 @@
+.hero-banner {
+  position: relative;
+  height: 320px;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-logo {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.hero-banner h1 {
+  font-size: 42px;
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+  color: #f8f8f8;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  max-width: 90%;
+  margin: 0 auto;
+}
