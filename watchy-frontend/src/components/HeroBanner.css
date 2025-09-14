@@ -240,10 +240,7 @@
 }
 
 .hero-highlight {
-  background: linear-gradient(90deg, #00ff88, #00cc6f);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #00ff88;
   font-weight: 800;
 }
 
