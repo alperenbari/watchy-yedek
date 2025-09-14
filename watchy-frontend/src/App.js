@@ -37,7 +37,7 @@ function App() {
     <div className="App" style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh', padding: '20px' }}>
       {/* Sinematik HeroBanner */}
       <HeroBanner 
-        title="Tüm platformlarda Türk sinemasının en iyileri" 
+        title="Tüm platformlarda sinemanın en iyileri!" 
         onSearch={handleHeroSearch}
       />
       
