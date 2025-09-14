@@ -1,29 +1,422 @@
+/* HeroBanner.css - Sinematik Tasarım */
+
 .hero-banner {
   position: relative;
-  height: 320px;
-  background-size: cover;
-  background-position: center;
+  min-height: 400px;
+  background: #0a0a0a;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
+  overflow: hidden;
+  margin: -20px -20px 30px -20px; /* App.js padding'ini nötralize et */
+}
+
+/* Film grain animasyonu */
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+  animation: grain 8s steps(10) infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 25%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+/* Projeksiyon ışık efekti */
+.projector-light {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 30vw solid transparent;
+  border-right: 30vw solid transparent;
+  border-top: 100vh solid rgba(255, 255, 255, 0.02);
+  z-index: 1;
+  animation: flicker 4s ease-in-out infinite;
+  filter: blur(50px);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.6; }
+  75% { opacity: 0.9; }
+}
+
+/* Sinema koltuklarının silüeti */
+.cinema-seats {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 150'%3E%3Cpath fill='%23000000' d='M0,150 L0,100 Q20,80 40,85 T80,85 Q100,80 120,85 T160,85 Q180,80 200,85 T240,85 Q260,80 280,85 T320,85 Q340,80 360,85 T400,85 Q420,80 440,85 T480,85 Q500,80 520,85 T560,85 Q580,80 600,85 T640,85 Q660,80 680,85 T720,85 Q740,80 760,85 T800,85 Q820,80 840,85 T880,85 Q900,80 920,85 T960,85 Q980,80 1000,85 T1040,85 Q1060,80 1080,85 T1120,85 Q1140,80 1160,85 T1200,85 Q1220,80 1240,85 T1280,85 Q1300,80 1320,85 T1360,85 Q1380,80 1400,85 T1440,85 L1440,150 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+  opacity: 0.3;
+  z-index: 1;
+}
+
+/* Film şeridi sol */
+.film-strip-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 3;
+  overflow: hidden;
+}
+
+.film-strip-left::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: -10px;
+  width: 30px;
+  height: 120%;
+  background: repeating-linear-gradient(
+    0deg,
+    #1a1a1a 0px,
+    #1a1a1a 20px,
+    #2a2a2a 20px,
+    #2a2a2a 25px,
+    #1a1a1a 25px,
+    #1a1a1a 45px,
+    transparent 45px,
+    transparent 50px
+  );
+  animation: filmScroll 10s linear infinite;
+  opacity: 0.3;
+}
+
+/* Film şeridi sağ */
+.film-strip-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(-90deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 3;
+  overflow: hidden;
+}
+
+.film-strip-right::before {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: -10px;
+  width: 30px;
+  height: 120%;
+  background: repeating-linear-gradient(
+    0deg,
+    #1a1a1a 0px,
+    #1a1a1a 20px,
+    #2a2a2a 20px,
+    #2a2a2a 25px,
+    #1a1a1a 25px,
+    #1a1a1a 45px,
+    transparent 45px,
+    transparent 50px
+  );
+  animation: filmScroll 10s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes filmScroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50px); }
+}
+
+/* İçerik container - glassmorphism */
+.hero-content-container {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 1200px;
+  padding: 50px 60px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Üst header - Logo, Başlık, Login - ÜSTTEN HİZALAMA */
+.hero-header {
+  display: flex;
+  align-items: flex-start;  /* ÖNEMLİ: Üstten hizalama */
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 30px;
+}
+
+/* Logo container */
+.hero-logo-container {
+  display: flex;
+  align-items: flex-start;
+  animation: slideInLeft 1s ease-out;
+  flex-shrink: 0;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .hero-logo {
-  position: absolute;
-  top: 20px;
-  left: 30px;
-  height: 75px;
+  height: 100px;  /* LOGO BÜYÜTÜLDÜ */
   object-fit: contain;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+}
+
+/* Ana başlık */
+.hero-title {
+  flex: 1;
+  text-align: center;
+  padding-top: 15px;  /* Yazıyı logo ile üstten hizalamak için */
 }
 
 .hero-banner h1 {
-  font-size: 42px;
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: fadeIn 1.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.hero-highlight {
+  background: linear-gradient(90deg, #00ff88, #00cc6f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* Login butonu */
+.hero-login-button {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6f 100%);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
   font-weight: 600;
-  font-family: 'Georgia', serif;
-  color: #f8f8f8;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  max-width: 90%;
-  margin: 0 auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 15px rgba(0, 255, 136, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  animation: slideInRight 1s ease-out;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 15px;  /* Butonun üst hizalamasını ayarla */
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 255, 136, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #00ff88 0%, #00e67d 100%);
+}
+
+.hero-login-button:active {
+  transform: translateY(0);
+}
+
+/* Arama kutusu container */
+.hero-search-container {
+  display: flex;
+  justify-content: center;
+  animation: slideInUp 1.4s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-search-box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.hero-search-input {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  font-size: 16px;
+  background: rgba(40, 40, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hero-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.hero-search-input:focus {
+  outline: none;
+  border-color: #00ff88;
+  background: rgba(50, 50, 50, 0.9);
+  box-shadow: 
+    0 0 0 3px rgba(0, 255, 136, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.hero-search-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.hero-search-button:hover {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+}
+
+.hero-search-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hero-banner {
+    min-height: 350px;
+  }
+
+  .hero-content-container {
+    width: 95%;
+    padding: 30px 20px;
+  }
+
+  .hero-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;  /* Mobile'de ortala */
+  }
+
+  .hero-logo {
+    height: 70px;  /* Mobile'de logo boyutu */
+  }
+
+  .hero-title {
+    padding-top: 0;
+  }
+
+  .hero-banner h1 {
+    font-size: 22px;
+  }
+
+  .hero-login-button {
+    padding: 10px 24px;
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .film-strip-left,
+  .film-strip-right {
+    width: 40px;
+  }
+
+  .cinema-seats {
+    height: 80px;
+  }
+
+  .hero-search-input {
+    font-size: 14px;
+    padding: 14px 45px 14px 16px;
+  }
 }

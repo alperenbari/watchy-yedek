@@ -1,0 +1,79 @@
+.directors-cinema {
+  margin-bottom: 60px;
+}
+
+.directors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.explore-button {
+  background: transparent;
+  color: #888;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.explore-button:hover {
+  color: #fff;
+}
+
+.directors-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.director-card {
+  flex: 0 0 200px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.director-card:hover {
+  background: #222;
+}
+
+.director-avatar {
+  margin-bottom: 16px;
+}
+
+.director-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.director-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+.director-film-count {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .directors-container {
+    gap: 16px;
+  }
+  
+  .director-card {
+    flex: 0 0 180px;
+    padding: 16px;
+  }
+}
