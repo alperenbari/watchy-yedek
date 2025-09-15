@@ -34,8 +34,8 @@ async function searchMoviesWithCredits(query) {
       const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
         params: {
           api_key: TMDB_API_KEY,
-          with_origin_country: 'TR',
-          language: 'tr-TR',
+          with_origin_country: 'US',
+          language: 'en-US',
           include_adult: false,
           sort_by: sort,
           page
@@ -77,14 +77,14 @@ async function getWatchProviders(movieId) {
     params: { api_key: TMDB_API_KEY }
   });
   return {
-    platforms: res.data?.results?.TR?.flatrate || [],
-    link: res.data?.results?.TR?.link || ''
+    platforms: res.data?.results?.US?.flatrate || [],
+    link: res.data?.results?.US?.link || ''
   };
 }
 
 async function getMovieTitle(movieId) {
   const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
-    params: { api_key: TMDB_API_KEY, language: 'tr-TR' }
+    params: { api_key: TMDB_API_KEY, language: 'en-US' }
   });
   return res.data.title;
 }
