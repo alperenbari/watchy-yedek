@@ -28,13 +28,13 @@ router.get('/', async (req, res) => {
       const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
         params: {
           api_key: TMDB_API_KEY,
-          language: 'tr-TR',
+          language: 'en-US',
           sort_by: 'popularity.desc',
           include_adult: false,
           page,
           primary_release_date_gte: `${from}-01-01`,
           primary_release_date_lte: `${to}-12-31`,
-          with_origin_country: 'TR'
+          with_origin_country: 'US'
         }
       });
 

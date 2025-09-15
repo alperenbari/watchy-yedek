@@ -17,10 +17,10 @@ router.get('/:year', async (req, res) => {
       const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
         params: {
           api_key: TMDB_API_KEY,
-          language: 'tr-TR',
+          language: 'en-US',
           sort_by: 'popularity.desc',
           include_adult: false,
-          with_origin_country: 'TR',
+          with_origin_country: 'US',
           page,
           primary_release_year: year
         }

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './thematicjourneys.css';
 import { searchMoviesByPeriod } from '../services/api';
 
-const ThematicJourneys = () => {
+const PeriodCinema = () => {
   const [movies1980s, setMovies1980s] = useState([]);
   const [movies1990s, setMovies1990s] = useState([]);
   const [movies2000s, setMovies2000s] = useState([]);
+  const [movies2010s, setMovies2010s] = useState([]);
+  const [movies2020s, setMovies2020s] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const journeys = [
@@ -35,6 +37,24 @@ const ThematicJourneys = () => {
       period: [2000, 2009],
       color: '#dc2626',
       movies: movies2000s
+    },
+    {
+      id: '2010s',
+      title: '2010s',
+      subtitle: 'Franchise era',
+      description: 'Superheroes and shared universes',
+      period: [2010, 2019],
+      color: '#9333ea',
+      movies: movies2010s
+    },
+    {
+      id: '2020s',
+      title: '2020s',
+      subtitle: 'Streaming shift',
+      description: 'Digital releases and diverse stories',
+      period: [2020, 2029],
+      color: '#f59e0b',
+      movies: movies2020s
     }
   ];
 
@@ -43,15 +63,19 @@ const ThematicJourneys = () => {
       try {
         setLoading(true);
         
-        const [data1980s, data1990s, data2000s] = await Promise.all([
+        const [data1980s, data1990s, data2000s, data2010s, data2020s] = await Promise.all([
           searchMoviesByPeriod(1980, 1989),
           searchMoviesByPeriod(1990, 1999),
-          searchMoviesByPeriod(2000, 2009)
+          searchMoviesByPeriod(2000, 2009),
+          searchMoviesByPeriod(2010, 2019),
+          searchMoviesByPeriod(2020, 2029)
         ]);
 
         setMovies1980s(data1980s.slice(0, 3));
         setMovies1990s(data1990s.slice(0, 3));
         setMovies2000s(data2000s.slice(0, 3));
+        setMovies2010s(data2010s.slice(0, 3));
+        setMovies2020s(data2020s.slice(0, 3));
       } catch (error) {
         console.error('Error fetching thematic movies:', error);
       } finally {
@@ -65,7 +89,7 @@ const ThematicJourneys = () => {
   if (loading) {
     return (
       <section className="thematic-journeys">
-        <h2 className="section-title">Thematic Journeys</h2>
+        <h2 className="section-title">Dönem Sineması</h2>
         <div className="loading-placeholder">Loading...</div>
       </section>
     );
@@ -73,7 +97,7 @@ const ThematicJourneys = () => {
 
   return (
     <section className="thematic-journeys">
-      <h2 className="section-title">Thematic Journeys</h2>
+      <h2 className="section-title">Dönem Sineması</h2>
       <div className="journeys-container">
         {journeys.map((journey) => (
           <div 
@@ -117,4 +141,5 @@ const ThematicJourneys = () => {
   );
 };
 
-export default ThematicJourneys;
+export default PeriodCinema;
+

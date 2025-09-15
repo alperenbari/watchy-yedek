@@ -3,6 +3,7 @@ import './App.css';
 import ResultList from './components/ResultList';
 import { useSearch } from './hooks/useSearch';
 import HeroBanner from './components/HeroBanner';
+import PeriodCinema from './components/thematic_journeys';
 
 function App() {
   const {
@@ -27,6 +28,8 @@ function App() {
         title="Tüm platformlarda sinemanın en iyileri!"
         onSearch={handleHeroSearch}
       />
+
+      <PeriodCinema />
 
       {/* Yükleniyor durumu */}
       {loading && (
