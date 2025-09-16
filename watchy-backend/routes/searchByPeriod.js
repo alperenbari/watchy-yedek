@@ -3,7 +3,7 @@ const router = express.Router();
 const { getCredits } = require('../services/tmdbService');
 const axios = require('axios');
 
-const TMDB_API_KEY = '612b8d18d354e3d2756cb9bf6abc219a';
+const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
 
 router.get('/', async (req, res) => {
   const from = parseInt(req.query.from);
