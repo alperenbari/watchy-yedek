@@ -6,6 +6,7 @@ const searchByYearRoute = require('./routes/searchByYear');
 const searchByPeriodRoute = require('./routes/searchByPeriod');
 const platformsRoute = require('./routes/platforms');
 const scoreRoute = require('./routes/score');
+const moviesRoute = require('./routes/movies');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -18,6 +19,7 @@ app.use('/api/search/period', searchByPeriodRoute); // Örn: /api/search/period?
 app.use('/api/search', searchRoute);              // Örn: /api/search/:query
 app.use('/api/platforms', platformsRoute);        // Örn: /api/platforms/:movieId
 app.use('/api/watchy-score', scoreRoute);         // Örn: /api/watchy-score/:movieId
+app.use('/api/movies', moviesRoute);              // Örn: /api/movies/decade?start=YYYY&end=YYYY
 
 // Sunucuyu başlat
 app.listen(PORT, () => {
