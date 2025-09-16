@@ -2,7 +2,7 @@
 const axios = require('axios');
 const normalize = require('./normalize');
 
-const TMDB_API_KEY = '612b8d18d354e3d2756cb9bf6abc219a';
+const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
 
 async function getCredits(movieId) {
   try {

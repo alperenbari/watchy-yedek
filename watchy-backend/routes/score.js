@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const WatchyScoreTMDB = require('../utils/WatchyScoreTMDB');
 
-const TMDB_API_KEY = '612b8d18d354e3d2756cb9bf6abc219a';
+const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
 const scoreCalculator = new WatchyScoreTMDB(TMDB_API_KEY);
 
 router.get('/:movieId', async (req, res) => {
