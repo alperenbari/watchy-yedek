@@ -41,8 +41,8 @@ router.get('/', async (req, res) => {
             sort_by: 'popularity.desc',
             include_adult: false,
             page,
-            primary_release_date_gte: `${from}-01-01`,
-            primary_release_date_lte: `${to}-12-31`,
+            'primary_release_date.gte': `${from}-01-01`,
+            'primary_release_date.lte': `${to}-12-31`,
             with_origin_country: 'US'
           }
         })
