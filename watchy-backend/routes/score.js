@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const WatchyScoreTMDB = require('../utils/WatchyScoreTMDB');
+const { missingCredentialsMessage } = require('../config/tmdb');
 
-const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
-const scoreCalculator = new WatchyScoreTMDB(TMDB_API_KEY);
+const scoreCalculator = new WatchyScoreTMDB();
 
 router.get('/:movieId', async (req, res) => {
   const movieId = req.params.movieId;
@@ -18,6 +18,15 @@ router.get('/:movieId', async (req, res) => {
     }
   } catch (err) {
     console.error('Watchy puanı hatası:', err.message);
+
+    if (err.message === missingCredentialsMessage()) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (err.response?.status === 401) {
+      return res.status(401).json({ error: 'TMDB kimlik doğrulaması başarısız. Lütfen API ayarlarınızı kontrol edin.' });
+    }
+
     res.status(500).json({ error: 'Watchy puanı alınamadı.' });
   }
 });

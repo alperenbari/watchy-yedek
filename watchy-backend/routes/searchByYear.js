@@ -3,8 +3,11 @@ const express = require('express');
 const router = express.Router();
 const { getCredits } = require('../services/tmdbService');
 const axios = require('axios');
-
-const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
+const {
+  withTmdbAuth,
+  hasTmdbCredentials,
+  missingCredentialsMessage
+} = require('../config/tmdb');
 
 router.get('/:year', async (req, res) => {
   const year = req.params.year;
@@ -12,19 +15,26 @@ router.get('/:year', async (req, res) => {
   const seen = new Set();
   const results = [];
 
+  if (!hasTmdbCredentials()) {
+    console.error('🔴 TMDB kimlik bilgisi eksik:', missingCredentialsMessage());
+    return res.status(500).json({ error: missingCredentialsMessage() });
+  }
+
   try {
     for (let page = 1; page <= MAX_PAGES; page++) {
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: TMDB_API_KEY,
-          language: 'en-US',
-          sort_by: 'popularity.desc',
-          include_adult: false,
-          with_origin_country: 'US',
-          page,
-          primary_release_year: year
-        }
-      });
+      const response = await axios.get(
+        'https://api.themoviedb.org/3/discover/movie',
+        withTmdbAuth({
+          params: {
+            language: 'en-US',
+            sort_by: 'popularity.desc',
+            include_adult: false,
+            with_origin_country: 'US',
+            page,
+            primary_release_year: year
+          }
+        })
+      );
 
       const movies = response.data.results || [];
 
@@ -49,7 +59,19 @@ router.get('/:year', async (req, res) => {
 
     res.json(results);
   } catch (err) {
-    console.error('🔴 Yıl bazlı arama hatası:', err.message);
+    const status = err.response?.status;
+    const details = err.response?.data?.status_message || err.message;
+
+    console.error('🔴 Yıl bazlı arama hatası:', details);
+
+    if (err.message === missingCredentialsMessage()) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (status === 401) {
+      return res.status(401).json({ error: 'TMDB kimlik doğrulaması başarısız. Lütfen API ayarlarınızı kontrol edin.' });
+    }
+
     res.status(500).json({ error: 'Yıl bazlı arama sırasında hata oluştu.' });
   }
 });

@@ -1,18 +1,22 @@
 
 const axios = require('axios');
+const {
+  withTmdbAuth,
+  hasTmdbCredentials,
+  missingCredentialsMessage
+} = require('../config/tmdb');
 
 class WatchyScoreTMDB {
-  constructor(apiKey) {
-    this.apiKey = apiKey;
-  }
-
   async getScore(movieId) {
+    if (!hasTmdbCredentials()) {
+      throw new Error(missingCredentialsMessage());
+    }
+
     try {
-      const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
-        params: {
-          api_key: this.apiKey
-        }
-      });
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/movie/${movieId}`,
+        withTmdbAuth()
+      );
 
       const tmdbScore = res.data.vote_average || null;
       return tmdbScore ? parseFloat(tmdbScore.toFixed(1)) : null;
