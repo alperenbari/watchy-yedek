@@ -52,6 +52,11 @@ router.get('/', async (req, res) => {
       console.log(`📦 Sayfa ${page} — ${movies.length} film bulundu`);
 
       for (const film of movies) {
+        const year = Number(film.release_date?.slice(0, 4));
+        if (!Number.isFinite(year) || year < from || year > to) {
+          continue;
+        }
+
         if (!seen.has(film.id)) {
           seen.add(film.id);
           const { director, cast } = await getCredits(film.id);
@@ -71,8 +76,13 @@ router.get('/', async (req, res) => {
       if (response.data.total_pages <= page) break;
     }
 
-    console.log(`🎯 Toplam sonuç: ${results.length}`);
-    res.json(results);
+    const filteredResults = results.filter((result) => {
+      const releaseYear = Number(result.release_date?.slice(0, 4));
+      return Number.isFinite(releaseYear) && releaseYear >= from && releaseYear <= to;
+    });
+
+    console.log(`🎯 Toplam sonuç: ${filteredResults.length}`);
+    res.json(filteredResults);
   } catch (err) {
     const status = err.response?.status;
     const details = err.response?.data?.status_message || err.message;
