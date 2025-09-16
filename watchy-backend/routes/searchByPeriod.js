@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { getCredits } = require('../services/tmdbService');
 const axios = require('axios');
-
-const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
+const {
+  withTmdbAuth,
+  hasTmdbCredentials,
+  missingCredentialsMessage
+} = require('../config/tmdb');
 
 router.get('/', async (req, res) => {
   const from = parseInt(req.query.from);
@@ -22,21 +25,28 @@ router.get('/', async (req, res) => {
   const seen = new Set();
   const results = [];
 
+  if (!hasTmdbCredentials()) {
+    console.error('🔴 TMDB kimlik bilgisi eksik:', missingCredentialsMessage());
+    return res.status(500).json({ error: missingCredentialsMessage() });
+  }
+
   try {
     for (let page = 1; page <= MAX_PAGES; page++) {
       console.log(`🌐 TMDB'den sayfa ${page} çekiliyor...`);
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: TMDB_API_KEY,
-          language: 'en-US',
-          sort_by: 'popularity.desc',
-          include_adult: false,
-          page,
-          primary_release_date_gte: `${from}-01-01`,
-          primary_release_date_lte: `${to}-12-31`,
-          with_origin_country: 'US'
-        }
-      });
+      const response = await axios.get(
+        'https://api.themoviedb.org/3/discover/movie',
+        withTmdbAuth({
+          params: {
+            language: 'en-US',
+            sort_by: 'popularity.desc',
+            include_adult: false,
+            page,
+            primary_release_date_gte: `${from}-01-01`,
+            primary_release_date_lte: `${to}-12-31`,
+            with_origin_country: 'US'
+          }
+        })
+      );
 
       const movies = response.data.results || [];
       console.log(`📦 Sayfa ${page} — ${movies.length} film bulundu`);
@@ -64,7 +74,19 @@ router.get('/', async (req, res) => {
     console.log(`🎯 Toplam sonuç: ${results.length}`);
     res.json(results);
   } catch (err) {
-    console.error('🔴 Dönem araması hatası:', err.message);
+    const status = err.response?.status;
+    const details = err.response?.data?.status_message || err.message;
+
+    console.error('🔴 Dönem araması hatası:', details);
+
+    if (err.message === missingCredentialsMessage()) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (status === 401) {
+      return res.status(401).json({ error: 'TMDB kimlik doğrulaması başarısız. Lütfen API ayarlarınızı kontrol edin.' });
+    }
+
     res.status(500).json({ error: 'Dönem araması sırasında hata oluştu.' });
   }
 });

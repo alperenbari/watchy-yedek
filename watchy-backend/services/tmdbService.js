@@ -1,14 +1,25 @@
 
 const axios = require('axios');
 const normalize = require('./normalize');
+const {
+  withTmdbAuth,
+  hasTmdbCredentials,
+  missingCredentialsMessage
+} = require('../config/tmdb');
 
-const TMDB_API_KEY = '4ff1d6d6b1541dc331260d69f3ab6921';
+function ensureCredentials() {
+  if (!hasTmdbCredentials()) {
+    throw new Error(missingCredentialsMessage());
+  }
+}
 
 async function getCredits(movieId) {
+  ensureCredentials();
   try {
-    const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-      params: { api_key: TMDB_API_KEY }
-    });
+    const res = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/credits`,
+      withTmdbAuth()
+    );
 
     const crew = res.data.crew || [];
     const cast = res.data.cast || [];
@@ -24,6 +35,7 @@ async function getCredits(movieId) {
 }
 
 async function searchMoviesWithCredits(query) {
+  ensureCredentials();
   const MAX_PAGES = 30;
   const seen = new Set();
   const filtered = [];
@@ -31,16 +43,18 @@ async function searchMoviesWithCredits(query) {
 
   for (const sort of sortOptions) {
     for (let page = 1; page <= MAX_PAGES; page++) {
-      const response = await axios.get('https://api.themoviedb.org/3/discover/movie', {
-        params: {
-          api_key: TMDB_API_KEY,
-          with_origin_country: 'US',
-          language: 'en-US',
-          include_adult: false,
-          sort_by: sort,
-          page
-        }
-      });
+      const response = await axios.get(
+        'https://api.themoviedb.org/3/discover/movie',
+        withTmdbAuth({
+          params: {
+            with_origin_country: 'US',
+            language: 'en-US',
+            include_adult: false,
+            sort_by: sort,
+            page
+          }
+        })
+      );
 
       const results = response.data.results || [];
 
@@ -73,9 +87,11 @@ async function searchMoviesWithCredits(query) {
 }
 
 async function getWatchProviders(movieId) {
-  const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers`, {
-    params: { api_key: TMDB_API_KEY }
-  });
+  ensureCredentials();
+  const res = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}/watch/providers`,
+    withTmdbAuth()
+  );
   return {
     platforms: res.data?.results?.US?.flatrate || [],
     link: res.data?.results?.US?.link || ''
@@ -83,9 +99,11 @@ async function getWatchProviders(movieId) {
 }
 
 async function getMovieTitle(movieId) {
-  const res = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
-    params: { api_key: TMDB_API_KEY, language: 'en-US' }
-  });
+  ensureCredentials();
+  const res = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}`,
+    withTmdbAuth({ params: { language: 'en-US' } })
+  );
   return res.data.title;
 }
 
