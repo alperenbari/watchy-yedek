@@ -13,9 +13,9 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 
 // API rotalarını tanımla
-app.use('/api/search', searchRoute);              // Örn: /api/search/:query
 app.use('/api/search/year', searchByYearRoute);   // Örn: /api/search/year/:year
-app.use('/api/search/period', searchByPeriodRoute);
+app.use('/api/search/period', searchByPeriodRoute); // Örn: /api/search/period?from=YYYY&to=YYYY
+app.use('/api/search', searchRoute);              // Örn: /api/search/:query
 app.use('/api/platforms', platformsRoute);        // Örn: /api/platforms/:movieId
 app.use('/api/watchy-score', scoreRoute);         // Örn: /api/watchy-score/:movieId
 
