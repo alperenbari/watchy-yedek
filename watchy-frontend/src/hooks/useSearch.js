@@ -49,7 +49,6 @@ export const useSearch = () => {
     setScores({});
     setLoading(true);
     try {
-      const res = await fetch(getApiUrl(`search/year/${year}`));
       const data = await res.json();
       setSearchResults(data);
       for (const movie of data) {
