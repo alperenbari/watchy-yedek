@@ -1,100 +1,49 @@
 const API_ROOT_PATH = '/api';
-const rawBaseUrl = process.env.REACT_APP_API_BASE_URL ?? '';
 
-export const API_BASE_URL = rawBaseUrl.trim().replace(/\/+$/, '');
+export const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL ?? '').replace(/\/+$/, '');
 
-const stripTrailingSlash = (value) => value.replace(/\/+$/, '');
-const ensureLeadingSlash = (value) => (value.startsWith('/') ? value : `/${value}`);
-const removeLeadingSlash = (value) => value.replace(/^\/+/, '');
-
-const splitPathSearchHash = (input) => {
-  const hashIndex = input.indexOf('#');
-  let path = input;
-  let search = '';
-  let hash = '';
-
-  if (hashIndex !== -1) {
-    hash = input.slice(hashIndex);
-    path = input.slice(0, hashIndex);
-  }
-
-  const questionInPath = path.indexOf('?');
-  if (questionInPath !== -1) {
-    search = path.slice(questionInPath);
-    path = path.slice(0, questionInPath);
-  }
-
-  return { path, search, hash };
-};
+const trimTrailingSlash = (value = '') => value.replace(/\/+$/, '');
+const removeLeadingSlash = (value = '') => value.replace(/^\/+/, '');
 
 const buildApiPath = (path = '') => {
-  const normalized = path.toString().trim();
-  if (!normalized) {
+  const trimmed = path.trim();
+
+  if (!trimmed) {
     return API_ROOT_PATH;
   }
 
-  const withLeadingSlash = ensureLeadingSlash(normalized);
-  if (withLeadingSlash === API_ROOT_PATH || withLeadingSlash.startsWith(`${API_ROOT_PATH}/`)) {
-    return withLeadingSlash;
-  }
+  const withoutRoot = trimmed.startsWith(API_ROOT_PATH)
+    ? trimmed.slice(API_ROOT_PATH.length)
+    : trimmed;
 
-  return `${API_ROOT_PATH}${withLeadingSlash}`;
+  const relative = removeLeadingSlash(withoutRoot);
+  return relative ? `${API_ROOT_PATH}/${relative}` : API_ROOT_PATH;
 };
 
-/**
- * Resolves the requested API path so it works with both the CRA dev proxy (no base URL)
- * and any configured backend origin (with or without an "/api" suffix in its pathname).
- */
-const resolveWithBase = (apiPath) => {
+const extractRelativeFromApiPath = (apiPath) => {
+  if (apiPath === API_ROOT_PATH) {
+    return '';
+  }
+
+  return removeLeadingSlash(apiPath.slice(API_ROOT_PATH.length));
+};
+
+export const getApiUrl = (path = '') => {
+  const apiPath = buildApiPath(path);
+
   if (!API_BASE_URL) {
     return apiPath;
   }
 
-  const { path, search, hash } = splitPathSearchHash(apiPath);
-  const suffixAfterApi = removeLeadingSlash(
-    path.startsWith(API_ROOT_PATH) ? path.slice(API_ROOT_PATH.length) : path
-  );
+  const base = trimTrailingSlash(API_BASE_URL);
 
-  try {
-    const baseUrl = new URL(API_BASE_URL);
-    const basePath = stripTrailingSlash(baseUrl.pathname || '');
-    const baseSegments = basePath.split('/').filter(Boolean);
-    const includesApiSegment = baseSegments.includes('api');
-
-    let finalPath;
-
-    if (!basePath || basePath === '/') {
-      finalPath = path;
-    } else if (path === API_ROOT_PATH) {
-      finalPath = includesApiSegment ? basePath : `${basePath}${API_ROOT_PATH}`;
-    } else if (path.startsWith(`${API_ROOT_PATH}/`)) {
-      finalPath = includesApiSegment
-        ? `${basePath}/${suffixAfterApi}`
-        : `${basePath}${path}`;
-    } else {
-      finalPath = `${basePath}${ensureLeadingSlash(path)}`;
-    }
-
-    baseUrl.pathname = finalPath.replace(/\/+/g, '/');
-    baseUrl.search = search;
-    baseUrl.hash = hash;
-    return baseUrl.toString();
-  } catch (error) {
-    const trimmedBase = stripTrailingSlash(API_BASE_URL);
-    const baseSegments = trimmedBase.split('/').filter(Boolean);
-    const includesApiSegment = baseSegments.includes('api');
-
-    if (includesApiSegment) {
-      const joiner = suffixAfterApi ? `/${suffixAfterApi}` : '';
-      return `${trimmedBase}${joiner}${search}${hash}`;
-    }
-
-    const joiner = path.startsWith('/') ? path : `/${path}`;
-    return `${trimmedBase}${joiner}${search}${hash}`;
+  if (base.endsWith(API_ROOT_PATH)) {
+    const relative = extractRelativeFromApiPath(apiPath);
+    return relative ? `${base}/${relative}` : base;
   }
-};
 
-export const getApiUrl = (path = '') => resolveWithBase(buildApiPath(path));
+  return `${base}${apiPath}`;
+};
 
 export const searchMovies = async (query) => {
   const res = await fetch(getApiUrl(`search/${encodeURIComponent(query)}`));
