@@ -1,48 +1,15 @@
 const API_ROOT_PATH = '/api';
 
-export const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL ?? '').replace(/\/+$/, '');
+export const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL ?? '').replace(/\/$/, '');
 
-const trimTrailingSlash = (value = '') => value.replace(/\/+$/, '');
-const removeLeadingSlash = (value = '') => value.replace(/^\/+/, '');
-
-const buildApiPath = (path = '') => {
-  const trimmed = path.trim();
-
-  if (!trimmed) {
-    return API_ROOT_PATH;
-  }
-
-  const withoutRoot = trimmed.startsWith(API_ROOT_PATH)
-    ? trimmed.slice(API_ROOT_PATH.length)
-    : trimmed;
-
-  const relative = removeLeadingSlash(withoutRoot);
-  return relative ? `${API_ROOT_PATH}/${relative}` : API_ROOT_PATH;
-};
-
-const extractRelativeFromApiPath = (apiPath) => {
-  if (apiPath === API_ROOT_PATH) {
-    return '';
-  }
-
-  return removeLeadingSlash(apiPath.slice(API_ROOT_PATH.length));
+const normalizePath = (path = '') => {
+  const trimmed = path.trim().replace(/^\/+/, '');
+  return trimmed ? `${API_ROOT_PATH}/${trimmed}` : API_ROOT_PATH;
 };
 
 export const getApiUrl = (path = '') => {
-  const apiPath = buildApiPath(path);
-
-  if (!API_BASE_URL) {
-    return apiPath;
-  }
-
-  const base = trimTrailingSlash(API_BASE_URL);
-
-  if (base.endsWith(API_ROOT_PATH)) {
-    const relative = extractRelativeFromApiPath(apiPath);
-    return relative ? `${base}/${relative}` : base;
-  }
-
-  return `${base}${apiPath}`;
+  const apiPath = normalizePath(path);
+  return API_BASE_URL ? `${API_BASE_URL}${apiPath}` : apiPath;
 };
 
 export const searchMovies = async (query) => {
