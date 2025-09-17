@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { searchMovies, getPlatforms, getWatchyScore } from '../services/api';
+import { searchMovies, getPlatforms, getWatchyScore, getApiUrl } from '../services/api';
 
 export const useSearch = () => {
   const [query, setQuery] = useState('');
@@ -49,7 +49,7 @@ export const useSearch = () => {
     setScores({});
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:4000/api/search/year/${year}`);
+      const res = await fetch(getApiUrl(`search/year/${year}`));
       const data = await res.json();
       setSearchResults(data);
       for (const movie of data) {
