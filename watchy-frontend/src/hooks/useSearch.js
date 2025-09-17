@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { searchMovies, getPlatforms, getWatchyScore, getApiUrl } from '../services/api';
+import { searchMovies, searchMoviesByYear, getPlatforms, getWatchyScore } from '../services/api';
 
 export const useSearch = () => {
   const [query, setQuery] = useState('');
@@ -15,26 +15,34 @@ export const useSearch = () => {
 
   const decades = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
 
+  const resetResults = () => {
+    setSearchResults([]);
+    setPlatforms({});
+    setScores({});
+  };
+
+  const populateMovieDetails = async (movies) => {
+    for (const movie of movies) {
+      const [platformRes, scoreRes] = await Promise.all([
+        getPlatforms(movie.movie_id),
+        getWatchyScore(movie.movie_id)
+      ]);
+      setPlatforms((prev) => ({ ...prev, [movie.movie_id]: platformRes }));
+      setScores((prev) => ({ ...prev, [movie.movie_id]: scoreRes.watchy_score }));
+    }
+  };
+
   const handleSearch = async () => {
     if (!query.trim()) return;
     setSelectedDecade(null);
     setSelectedYear(null);
     setShowDecades(false);
-    setSearchResults([]);
-    setPlatforms({});
-    setScores({});
+    resetResults();
     setLoading(true);
     try {
       const data = await searchMovies(query);
       setSearchResults(data);
-      for (const movie of data) {
-        const [platformRes, scoreRes] = await Promise.all([
-          getPlatforms(movie.movie_id),
-          getWatchyScore(movie.movie_id)
-        ]);
-        setPlatforms(prev => ({ ...prev, [movie.movie_id]: platformRes }));
-        setScores(prev => ({ ...prev, [movie.movie_id]: scoreRes.watchy_score }));
-      }
+      await populateMovieDetails(data);
     } catch (err) {
       console.error('Arama hatası:', err);
     } finally {
@@ -43,22 +51,14 @@ export const useSearch = () => {
   };
 
   const handleYearSelect = async (year) => {
+    setSelectedDecade(null);
     setSelectedYear(year);
-    setSearchResults([]);
-    setPlatforms({});
-    setScores({});
+    resetResults();
     setLoading(true);
     try {
-      const data = await res.json();
+      const data = await searchMoviesByYear(year);
       setSearchResults(data);
-      for (const movie of data) {
-        const [platformRes, scoreRes] = await Promise.all([
-          getPlatforms(movie.movie_id),
-          getWatchyScore(movie.movie_id)
-        ]);
-        setPlatforms(prev => ({ ...prev, [movie.movie_id]: platformRes }));
-        setScores(prev => ({ ...prev, [movie.movie_id]: scoreRes.watchy_score }));
-      }
+      await populateMovieDetails(data);
     } catch (err) {
       console.error('Yıl bazlı arama hatası:', err);
     } finally {
