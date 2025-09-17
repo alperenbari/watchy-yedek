@@ -82,19 +82,39 @@ const PeriodCinema = () => {
       setError(null);
 
       try {
-        const responses = await Promise.all(
+        const results = await Promise.allSettled(
           DECADE_CARDS.map(({ start }) => getTopMoviesByDecade(start, start + 9))
         );
 
         if (!isMounted) return;
 
         const grouped = {};
-        responses.forEach((movies, index) => {
+        let hadError = false;
+        let hasData = false;
+
+        results.forEach((result, index) => {
           const { id } = DECADE_CARDS[index];
-          grouped[id] = Array.isArray(movies) ? movies.slice(0, 3) : [];
+
+          if (result.status === 'fulfilled') {
+            const movies = Array.isArray(result.value) ? result.value.slice(0, 3) : [];
+            grouped[id] = movies;
+            if (movies.length > 0) {
+              hasData = true;
+            }
+          } else {
+            console.error('Error fetching thematic movies:', result.reason);
+            grouped[id] = [];
+            hadError = true;
+          }
         });
 
         setDecadeMovies(grouped);
+
+        if (hadError && !hasData) {
+          setError('Tematik filmler yüklenirken bir hata oluştu.');
+        } else if (hadError) {
+          setError('Bazı dönemler yüklenirken sorun yaşandı.');
+        }
       } catch (err) {
         console.error('Error fetching thematic movies:', err);
         if (isMounted) {
