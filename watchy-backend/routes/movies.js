@@ -99,6 +99,12 @@ router.get('/decade', async (req, res) => {
     console.error('🎬 On yıllık dilim filmleri alınamadı:', message);
 
     if (message === missingCredentialsMessage()) {
+      const fallbackMovies = getFallbackMovies(startYear, endYear, limit);
+      if (fallbackMovies.length > 0) {
+        console.warn('⚠️  TMDB kimlik bilgileri eksik. Yerel dönem filmleri kullanılıyor.');
+        return res.json(fallbackMovies);
+      }
+
       return res.status(500).json({ error: message });
     }
 
@@ -106,6 +112,12 @@ router.get('/decade', async (req, res) => {
       return res
         .status(401)
         .json({ error: 'TMDB kimlik doğrulaması başarısız. Lütfen API ayarlarınızı kontrol edin.' });
+    }
+
+    const fallbackMovies = getFallbackMovies(startYear, endYear, limit);
+    if (fallbackMovies.length > 0) {
+      console.warn('⚠️  TMDB isteği başarısız oldu. Yerel dönem filmleri kullanılıyor.');
+      return res.json(fallbackMovies);
     }
 
     res.status(500).json({ error: 'On yıllık döneme ait filmler alınırken hata oluştu.' });
