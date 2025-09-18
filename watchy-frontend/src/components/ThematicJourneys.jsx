@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const DECADES = [
-  { decade: '1950s', title: 'Naif Başlangıçlar', subtitle: 'İlk melodramlar, halk hikayeleri', color: '#1E3A8A' },
-  { decade: '1960s', title: 'Yeşilçam Rüyası', subtitle: 'Aile, aşk ve melodramın altın çağı', color: '#0077b6' },
-  { decade: '1970s', title: 'Toplumcu Gerçekçilik', subtitle: 'Köyden kente göç, sınıf çatışmaları', color: '#9b2226' },
-  { decade: '1980s', title: 'Darbe ve Sessizlik', subtitle: 'Baskı, suskunluk ve bireysel dram', color: '#003049' },
-  { decade: '1990s', title: 'Yalnızlık ve İçe Dönüş', subtitle: 'Şehirli bireylerin sancıları', color: '#386641' },
-  { decade: '2000s', title: 'Yeni Dalga', subtitle: 'Minimalizm ve estetik yoğunluk', color: '#cc5803' },
-  { decade: '2010s', title: 'Küresel Tanınırlık', subtitle: 'Cannes\'dan Altın Portakal’a yükseliş', color: '#6a4c93' },
-  { decade: '2020s', title: 'Dijital Geçiş', subtitle: 'Festivalden platforma uzanan sinema', color: '#ff7f51' }
+  { decade: '1950s', title: 'Altın Çağ Parıltısı', subtitle: 'Stüdyo müzikalleri, renkli gösteriler, yıldızlı aşklar', color: '#1E3A8A' },
+  { decade: '1960s', title: 'Yeni Hollywood Kıvılcımı', subtitle: 'Karşı kültür kahramanları eski düzeni zorluyor', color: '#0077b6' },
+  { decade: '1970s', title: 'Yönetmen Dönüşümü', subtitle: 'Sert dramalar ve cesur yönetmenler hikâyeleri yeniliyor', color: '#9b2226' },
+  { decade: '1980s', title: 'Gişe Patlaması', subtitle: 'Hızlı maceralar ve özel efekt şöleni', color: '#003049' },
+  { decade: '1990s', title: 'Bağımsız Rüzgârı', subtitle: 'Festival favorileriyle karakter odaklı filmler buluşuyor', color: '#386641' },
+  { decade: '2000s', title: 'Seri Başlangıçları', subtitle: 'Süper kahramanlar, fantastik seriler ve dünya gişesi devleri', color: '#cc5803' },
+  { decade: '2010s', title: 'Prestij ve Platformlar', subtitle: 'Ödül alan filmler cesur dijital yapımlarla buluşuyor', color: '#6a4c93' },
+  { decade: '2020s', title: 'Karma Ufuklar', subtitle: 'Önce dijital çıkanlar ve salon filmleri birlikte ilerliyor', color: '#ff7f51' }
 ];
 
 const ThematicJourneys = () => {
