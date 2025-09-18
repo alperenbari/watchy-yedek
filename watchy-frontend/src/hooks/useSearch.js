@@ -1,6 +1,11 @@
 
 import { useState } from 'react';
-import { searchMovies, searchMoviesByYear, getPlatforms, getWatchyScore } from '../services/api';
+import {
+  searchMovies,
+  searchMoviesByYear,
+  getPlatforms,
+  getWatchyScore
+} from '../services/api';
 
 export const useSearch = () => {
   const [query, setQuery] = useState('');
@@ -22,25 +27,67 @@ export const useSearch = () => {
   };
 
   const populateMovieDetails = async (movies) => {
-    for (const movie of movies) {
-      const [platformRes, scoreRes] = await Promise.all([
-        getPlatforms(movie.movie_id),
-        getWatchyScore(movie.movie_id)
-      ]);
-      setPlatforms((prev) => ({ ...prev, [movie.movie_id]: platformRes }));
-      setScores((prev) => ({ ...prev, [movie.movie_id]: scoreRes.watchy_score }));
-    }
+    if (!movies?.length) return;
+
+    const details = await Promise.all(
+      movies.map(async (movie) => {
+        try {
+          const [platformRes, scoreRes] = await Promise.all([
+            getPlatforms(movie.movie_id),
+            getWatchyScore(movie.movie_id)
+          ]);
+
+          return {
+            id: movie.movie_id,
+            platforms: platformRes,
+            score: scoreRes?.watchy_score ?? null
+          };
+        } catch (error) {
+          console.error(`Film detayları alınamadı (${movie.movie_id}):`, error);
+          return {
+            id: movie.movie_id,
+            platforms: [],
+            score: null
+          };
+        }
+      })
+    );
+
+    setPlatforms((prev) => {
+      const next = { ...prev };
+      details.forEach(({ id, platforms: platformList }) => {
+        next[id] = platformList;
+      });
+      return next;
+    });
+
+    setScores((prev) => {
+      const next = { ...prev };
+      details.forEach(({ id, score }) => {
+        next[id] = score;
+      });
+      return next;
+    });
   };
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const handleSearch = async (searchTerm) => {
+    const effectiveQuery = typeof searchTerm === 'string' ? searchTerm : query;
+    const trimmedQuery = effectiveQuery.trim();
+
+    if (!trimmedQuery) return;
+
+    if (trimmedQuery !== query) {
+      setQuery(trimmedQuery);
+    }
+
     setSelectedDecade(null);
     setSelectedYear(null);
     setShowDecades(false);
     resetResults();
     setLoading(true);
+
     try {
-      const data = await searchMovies(query);
+      const data = await searchMovies(trimmedQuery);
       setSearchResults(data);
       await populateMovieDetails(data);
     } catch (err) {
@@ -53,6 +100,7 @@ export const useSearch = () => {
   const handleYearSelect = async (year) => {
     setSelectedDecade(null);
     setSelectedYear(year);
+    setQuery('');
     resetResults();
     setLoading(true);
     try {

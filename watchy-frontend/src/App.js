@@ -7,7 +7,6 @@ import PeriodCinema from './components/thematic_journeys';
 
 function App() {
   const {
-    query, setQuery,
     searchResults,
     platforms,
     scores,
@@ -17,7 +16,6 @@ function App() {
 
   // HeroBanner'dan gelen arama işlemi
   const handleHeroSearch = (searchQuery) => {
-    setQuery(searchQuery);
     handleSearch(searchQuery);
   };
 
