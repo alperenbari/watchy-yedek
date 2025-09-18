@@ -5,6 +5,7 @@ const {
   hasTmdbCredentials,
   missingCredentialsMessage
 } = require('../config/tmdb');
+const { getFallbackMovies } = require('../services/fallbackDecadeMovies');
 
 const router = express.Router();
 
@@ -30,15 +31,19 @@ router.get('/decade', async (req, res) => {
     return res.status(400).json({ error: 'Geçerli bir başlangıç ve bitiş yılı sağlamalısınız.' });
   }
 
-  if (!hasTmdbCredentials()) {
-    return res.status(500).json({ error: missingCredentialsMessage() });
-  }
-
   const movies = [];
   const seen = new Set();
   const maxPages = 5;
 
   try {
+    if (!hasTmdbCredentials()) {
+      const fallback = getFallbackMovies(startYear, endYear, limit);
+      if (fallback.length === 0) {
+        console.warn('⚠️  TMDB kimlik bilgileri bulunamadı. Fallback dönem filmleri kullanılıyor.');
+      }
+      return res.json(fallback);
+    }
+
     for (let page = 1; page <= maxPages && movies.length < limit; page++) {
       const response = await axios.get(
         'https://api.themoviedb.org/3/discover/movie',
