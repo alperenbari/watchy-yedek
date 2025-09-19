@@ -6,66 +6,66 @@ const DECADE_CARDS = [
   {
     id: '1950s',
     start: 1950,
-    title: 'Naif Başlangıçlar',
-    subtitle: 'İlk melodramlar, halk hikayeleri',
-    description: 'Yeşilçam masalsı melodramlarla seyircisini buldu.',
-    color: '#1E3A8A'
+    title: 'Golden Age Spectacle',
+    subtitle: 'Technicolor musicals & biblical epics',
+    description: 'Hollywood dazzled post-war audiences with lavish productions and mega-stars.',
+    color: '#b91c1c'
   },
   {
     id: '1960s',
     start: 1960,
-    title: 'Yeşilçam Rüyası',
-    subtitle: 'Aile, aşk ve melodramın altın çağı',
-    description: 'Türk sineması romantik anlatılarıyla doruğa ulaştı.',
-    color: '#0077b6'
+    title: 'New Hollywood Sparks',
+    subtitle: 'Counterculture, cool, and bold ideas',
+    description: 'Studios embraced riskier storytelling as young auteurs challenged the system.',
+    color: '#c2410c'
   },
   {
     id: '1970s',
     start: 1970,
-    title: 'Toplumcu Gerçekçilik',
-    subtitle: 'Köyden kente göç, sınıf çatışmaları',
-    description: 'Toplumsal meseleler perdeye taşındı.',
-    color: '#9b2226'
+    title: 'Auteur Revolution',
+    subtitle: 'Grit, paranoia, and personal visions',
+    description: 'Filmmakers redefined the blockbuster with character-driven, uncompromising cinema.',
+    color: '#ca8a04'
   },
   {
     id: '1980s',
     start: 1980,
-    title: 'Darbe ve Sessizlik',
-    subtitle: 'Baskı, suskunluk ve bireysel dram',
-    description: 'Politik iklim filmlere içe dönük hikâyeler kattı.',
-    color: '#003049'
+    title: 'Blockbuster Boom',
+    subtitle: 'High-concept thrills and pop icons',
+    description: 'Spectacle ruled multiplexes as franchises and synth-fueled adventure films exploded.',
+    color: '#0f766e'
   },
   {
     id: '1990s',
     start: 1990,
-    title: 'Yalnızlık ve İçe Dönüş',
-    subtitle: 'Şehirli bireylerin sancıları',
-    description: 'Bağımsız sinema bireyin yalnızlığını anlattı.',
-    color: '#386641'
+    title: 'Indie Renaissance',
+    subtitle: 'Festival darlings meet studio hits',
+    description: 'Independent voices and prestige dramas thrived alongside game-changing effects.',
+    color: '#2563eb'
   },
   {
     id: '2000s',
     start: 2000,
-    title: 'Yeni Dalga',
-    subtitle: 'Minimalizm ve estetik yoğunluk',
-    description: 'Festival dünyasında öne çıkan minimal hikâyeler.',
-    color: '#cc5803'
+    title: 'Franchise Frontier',
+    subtitle: 'IP sagas & prestige spectacle',
+    description: 'Hollywood balanced mega-franchises with visionary auteurs and awards contenders.',
+    color: '#7c3aed'
   },
   {
     id: '2010s',
     start: 2010,
-    title: 'Küresel Tanınırlık',
-    subtitle: "Cannes'dan Altın Portakal’a yükseliş",
-    description: 'Türkiye sineması uluslararası platformlarda ses getirdi.',
-    color: '#6a4c93'
+    title: 'Streaming Disruption',
+    subtitle: 'Cinematic universes & bold voices',
+    description: 'Shared universes rose as diverse storytellers reshaped mainstream cinema.',
+    color: '#db2777'
   },
   {
     id: '2020s',
     start: 2020,
-    title: 'Dijital Geçiş',
-    subtitle: 'Festivalden platforma uzanan sinema',
-    description: 'Pandemi sonrası dijital anlatılar ve hibrit gösterimler.',
-    color: '#ff7f51'
+    title: 'Hybrid Storytelling',
+    subtitle: 'Theaters, platforms, and new horizons',
+    description: 'Studios blend theatrical spectacle with streaming experimentation in a rebounding era.',
+    color: '#f97316'
   }
 ];
 

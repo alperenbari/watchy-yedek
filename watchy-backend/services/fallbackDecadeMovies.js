@@ -2,185 +2,185 @@ const FALLBACK_MOVIES = {
   1950: [
     {
       movie_id: 'fallback-1950-1',
-      title: 'Kanun Namına',
+      title: "Singin' in the Rain",
       posterUrl: null,
-      overview: "Lütfi Ö. Akad'ın gerçek olaylardan uyarlanan suç draması.",
+      overview: 'Gene Kelly ve Debbie Reynolds ile MGM müzikallerinin parıltısı.',
       release_year: 1952
     },
     {
       movie_id: 'fallback-1950-2',
-      title: 'İstanbul Macerası',
+      title: 'Rear Window',
       posterUrl: null,
-      overview: 'Yeşilçam melodramlarının erken döneminden bir şehir hikâyesi.',
-      release_year: 1955
+      overview: 'Hitchcock klasik gerilimi mahalle gözetlemesine taşıdı.',
+      release_year: 1954
     },
     {
       movie_id: 'fallback-1950-3',
-      title: 'Gelinin Muradı',
+      title: 'Ben-Hur',
       posterUrl: null,
-      overview: 'Dönemin aile dramlarına örnek teşkil eden klasik film.',
-      release_year: 1957
+      overview: 'Charlton Heston başrollü destansı araba yarışı hâlâ nefes kesiyor.',
+      release_year: 1959
     }
   ],
   1960: [
     {
       movie_id: 'fallback-1960-1',
-      title: 'Susuz Yaz',
+      title: 'Psycho',
       posterUrl: null,
-      overview: "Metin Erksan'ın Berlin Altın Ayı ödüllü toplumsal dramı.",
-      release_year: 1963
+      overview: 'Duş sahnesiyle korku sinemasının dilini değiştiren Hitchcock başyapıtı.',
+      release_year: 1960
     },
     {
       movie_id: 'fallback-1960-2',
-      title: 'Sevmek Zamanı',
+      title: 'Lawrence of Arabia',
       posterUrl: null,
-      overview: 'Metaforlarla örülü unutulmaz bir aşk hikâyesi.',
-      release_year: 1965
+      overview: 'David Lean çölleri 70mm sinemanın büyüsüne dönüştürdü.',
+      release_year: 1962
     },
     {
       movie_id: 'fallback-1960-3',
-      title: 'Hudutların Kanunu',
+      title: 'The Graduate',
       posterUrl: null,
-      overview: "Yılmaz Güney ve Lütfi Ö. Akad işbirliğiyle çekilmiş toplumsal gerçekçi film.",
-      release_year: 1966
+      overview: 'Gençlik bunalımını ironik tonla anlatan Dustin Hoffman çıkışı.',
+      release_year: 1967
     }
   ],
   1970: [
     {
       movie_id: 'fallback-1970-1',
-      title: 'Selvi Boylum Al Yazmalım',
+      title: 'The Godfather',
       posterUrl: null,
-      overview: 'Aşkın emekle sınandığı unutulmaz Yeşilçam klasiği.',
-      release_year: 1977
+      overview: 'Coppola mafya destanı aile dramını operatik seviyeye taşıdı.',
+      release_year: 1972
     },
     {
       movie_id: 'fallback-1970-2',
-      title: 'Sürü',
+      title: 'Taxi Driver',
       posterUrl: null,
-      overview: 'Toplumsal dönüşümün dramatik hikâyesi.',
-      release_year: 1978
+      overview: 'Scorsese, Vietnam sonrası New York paranoyasını unutulmaz kıldı.',
+      release_year: 1976
     },
     {
       movie_id: 'fallback-1970-3',
-      title: 'Arkadaş',
+      title: 'Star Wars',
       posterUrl: null,
-      overview: 'Yılmaz Güney imzalı sınıf çatışmasını merkezine alan film.',
-      release_year: 1974
+      overview: 'George Lucas uzay operasıyla blockbuster çağını başlattı.',
+      release_year: 1977
     }
   ],
   1980: [
     {
       movie_id: 'fallback-1980-1',
-      title: 'Anayurt Oteli',
+      title: 'E.T. the Extra-Terrestrial',
       posterUrl: null,
-      overview: 'Yusuf Atılgan uyarlaması psikolojik bir dram.',
-      release_year: 1987
+      overview: 'Spielberg dostluk ve bilimkurguyu gişe fenomenine dönüştürdü.',
+      release_year: 1982
     },
     {
       movie_id: 'fallback-1980-2',
-      title: 'Muhsin Bey',
+      title: 'Back to the Future',
       posterUrl: null,
-      overview: 'Arabesk kültürü üzerinden dönemin değişimini anlatan film.',
-      release_year: 1987
+      overview: 'Zamanda yolculuğu mizahla birleştiren kült klasik.',
+      release_year: 1985
     },
     {
       movie_id: 'fallback-1980-3',
-      title: 'Aaahh Belinda',
+      title: 'Blade Runner',
       posterUrl: null,
-      overview: 'Kimlik ve gerçeklik üzerine fantastik öğeler barındıran hiciv.',
-      release_year: 1986
+      overview: 'Ridley Scott neon-noir atmosferiyle siberpunk vizyonu kurdu.',
+      release_year: 1982
     }
   ],
   1990: [
     {
       movie_id: 'fallback-1990-1',
-      title: 'Masumiyet',
+      title: 'Pulp Fiction',
       posterUrl: null,
-      overview: 'Ömür boyu süren bir girdabın içine çekilen karakterlerin hikâyesi.',
-      release_year: 1997
+      overview: 'Tarantino pop kültürü diyaloğu ve doğrusal olmayan kurguyla tazeledi.',
+      release_year: 1994
     },
     {
       movie_id: 'fallback-1990-2',
-      title: 'Tabutta Rövaşata',
+      title: 'The Shawshank Redemption',
       posterUrl: null,
-      overview: "İstanbul'un kenarında yaşayan mahzun bir karakterin dramı.",
-      release_year: 1996
+      overview: 'Umut temasını hapishane dramında unutulmaz kılan klasik.',
+      release_year: 1994
     },
     {
       movie_id: 'fallback-1990-3',
-      title: 'Mayıs Sıkıntısı',
+      title: 'The Matrix',
       posterUrl: null,
-      overview: "Nuri Bilge Ceylan'ın kasaba üçlemesini tamamlayan film.",
+      overview: 'Wachowski kardeşler aksiyonu felsefi sorularla buluşturdu.',
       release_year: 1999
     }
   ],
   2000: [
     {
       movie_id: 'fallback-2000-1',
-      title: 'Uzak',
+      title: 'The Lord of the Rings: The Fellowship of the Ring',
       posterUrl: null,
-      overview: 'Büyük şehirde yabancılaşmanın sessiz anlatısı.',
-      release_year: 2002
+      overview: 'Peter Jackson fantastik epikleri Oscar vitrinine taşıdı.',
+      release_year: 2001
     },
     {
       movie_id: 'fallback-2000-2',
-      title: 'Yazı Tura',
+      title: 'Eternal Sunshine of the Spotless Mind',
       posterUrl: null,
-      overview: 'Askerlik sonrası hayata tutunmaya çalışan iki gencin hikâyesi.',
+      overview: 'Romantizmi bilimkurgu ile harmanlayan zarif hafıza yolculuğu.',
       release_year: 2004
     },
     {
       movie_id: 'fallback-2000-3',
-      title: 'İklimler',
+      title: 'The Dark Knight',
       posterUrl: null,
-      overview: 'İlişkilerin mevsimlere yayılan değişimini anlatan film.',
-      release_year: 2006
+      overview: 'Christopher Nolan süper kahraman türünü karanlık suç dramasına dönüştürdü.',
+      release_year: 2008
     }
   ],
   2010: [
     {
       movie_id: 'fallback-2010-1',
-      title: "Bir Zamanlar Anadolu'da",
+      title: 'Inception',
       posterUrl: null,
-      overview: 'Anadolu bozkırında geçen suç soruşturması üzerinden insan ruhu incelemesi.',
-      release_year: 2011
+      overview: 'Rüya içinde rüya kavramıyla gişe kurgusunu zekice zorlayan Nolan filmi.',
+      release_year: 2010
     },
     {
       movie_id: 'fallback-2010-2',
-      title: 'Kış Uykusu',
+      title: 'Mad Max: Fury Road',
       posterUrl: null,
-      overview: 'Cannes Altın Palmiye ödüllü uzun soluklu dram.',
-      release_year: 2014
+      overview: 'George Miller aksiyon koreografisini çöl üstünde yeniden tanımladı.',
+      release_year: 2015
     },
     {
       movie_id: 'fallback-2010-3',
-      title: 'Ahlat Ağacı',
+      title: 'Moonlight',
       posterUrl: null,
-      overview: 'Kök arayışındaki genç bir yazarın taşraya dönüş hikâyesi.',
-      release_year: 2018
+      overview: 'Oscar ödüllü büyüme hikâyesi hassasiyet ve şiirsellikle parladı.',
+      release_year: 2016
     }
   ],
   2020: [
     {
       movie_id: 'fallback-2020-1',
-      title: 'Kurak Günler',
+      title: 'Dune',
       posterUrl: null,
-      overview: 'Bozkır kasabasındaki politik gerilimi anlatan çağdaş bir dram.',
-      release_year: 2022
+      overview: 'Denis Villeneuve bilimkurgu destanını çağdaş ölçekte yeniden yorumladı.',
+      release_year: 2021
     },
     {
       movie_id: 'fallback-2020-2',
-      title: 'Karanlık Gece',
+      title: 'Everything Everywhere All at Once',
       posterUrl: null,
-      overview: 'Geçmişin hayaletleriyle yüzleşen bir gencin hikâyesi.',
+      overview: 'Çoklu evreni aile dramı ve aksiyonla birleştiren yaratıcı fenomen.',
       release_year: 2022
     },
     {
       movie_id: 'fallback-2020-3',
-      title: 'İki Şafak Arasında',
+      title: 'Top Gun: Maverick',
       posterUrl: null,
-      overview: 'Endüstriyel kazanın ardından vicdan muhasebesi yapan bir işçinin dramı.',
-      release_year: 2021
+      overview: 'Tom Cruise nostaljiyi yüksek oktanlı hava gösterisine dönüştürdü.',
+      release_year: 2022
     }
   ]
 };
