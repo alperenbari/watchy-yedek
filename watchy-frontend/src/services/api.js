@@ -1,4 +1,16 @@
-const DEFAULT_API_BASE = 'http://localhost:4000/api';
+const getDefaultApiBase = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:4000/api';
+  }
+
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return `${window.location.origin}/api`;
+  }
+
+  return '/api';
+};
+
+const DEFAULT_API_BASE = getDefaultApiBase();
 
 const sanitizeBaseUrl = (url) => {
   if (!url) return DEFAULT_API_BASE;
