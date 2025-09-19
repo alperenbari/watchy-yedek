@@ -3,14 +3,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const DECADES = [
-  { decade: '1950s', title: 'Altın Çağ Parıltısı', subtitle: 'Stüdyo müzikalleri, renkli gösteriler, yıldızlı aşklar', color: '#1E3A8A' },
-  { decade: '1960s', title: 'Yeni Hollywood Kıvılcımı', subtitle: 'Karşı kültür kahramanları eski düzeni zorluyor', color: '#0077b6' },
-  { decade: '1970s', title: 'Yönetmen Dönüşümü', subtitle: 'Sert dramalar ve cesur yönetmenler hikâyeleri yeniliyor', color: '#9b2226' },
-  { decade: '1980s', title: 'Gişe Patlaması', subtitle: 'Hızlı maceralar ve özel efekt şöleni', color: '#003049' },
-  { decade: '1990s', title: 'Bağımsız Rüzgârı', subtitle: 'Festival favorileriyle karakter odaklı filmler buluşuyor', color: '#386641' },
-  { decade: '2000s', title: 'Seri Başlangıçları', subtitle: 'Süper kahramanlar, fantastik seriler ve dünya gişesi devleri', color: '#cc5803' },
-  { decade: '2010s', title: 'Prestij ve Platformlar', subtitle: 'Ödül alan filmler cesur dijital yapımlarla buluşuyor', color: '#6a4c93' },
-  { decade: '2020s', title: 'Karma Ufuklar', subtitle: 'Önce dijital çıkanlar ve salon filmleri birlikte ilerliyor', color: '#ff7f51' }
 ];
 
 const ThematicJourneys = () => {
@@ -50,8 +42,10 @@ const ThematicJourneys = () => {
             }}
           >
             <h3 style={{ fontSize: '18px', marginBottom: '4px' }}>{theme.decade}</h3>
-            <h4 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '6px' }}>{theme.title}</h4>
-            <p style={{ fontSize: '14px', opacity: 0.9, marginBottom: '12px' }}>{theme.subtitle}</p>
+            <h4 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: theme.subtitle ? '6px' : '12px' }}>{theme.title}</h4>
+            {theme.subtitle && (
+              <p style={{ fontSize: '14px', opacity: 0.9, marginBottom: '12px' }}>{theme.subtitle}</p>
+            )}
             <div style={{ display: 'flex', gap: '6px', overflowX: 'auto' }}>
               {(filmsByDecade[theme.decade] || []).slice(0, 5).map((film, fidx) => (
                 <img
