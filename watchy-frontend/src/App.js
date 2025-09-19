@@ -3,7 +3,7 @@ import './App.css';
 import ResultList from './components/ResultList';
 import { useSearch } from './hooks/useSearch';
 import HeroBanner from './components/HeroBanner';
-import PeriodCinema from './components/thematic_journeys';
+import ThematicJourneys from './components/thematicjourneys';
 
 function App() {
   const {
@@ -27,7 +27,7 @@ function App() {
         onSearch={handleHeroSearch}
       />
 
-      <PeriodCinema />
+      <ThematicJourneys />
 
       {/* Yükleniyor durumu */}
       {loading && (
