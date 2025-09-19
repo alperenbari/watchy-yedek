@@ -3,54 +3,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const DECADES = [
-  {
-    decade: '1950s',
-    title: 'Golden Age Glamour',
-    subtitle: 'Studio musicals, Technicolor epics, star-driven romance',
-    color: '#1E3A8A'
-  },
-  {
-    decade: '1960s',
-    title: 'New Hollywood Sparks',
-    subtitle: 'Counterculture antiheroes challenge the old studio order',
-    color: '#0077b6'
-  },
-  {
-    decade: '1970s',
-    title: 'Auteur Revolution',
-    subtitle: 'Gritty dramas and daring directors redefine storytelling',
-    color: '#9b2226'
-  },
-  {
-    decade: '1980s',
-    title: 'Blockbuster Boom',
-    subtitle: 'High-concept adventure and special-effects spectacle',
-    color: '#003049'
-  },
-  {
-    decade: '1990s',
-    title: 'Indie Renaissance',
-    subtitle: 'Festival hits and character-driven studio dramas collide',
-    color: '#386641'
-  },
-  {
-    decade: '2000s',
-    title: 'Franchise Foundations',
-    subtitle: 'Superheroes, fantasy sagas, and global box-office juggernauts',
-    color: '#cc5803'
-  },
-  {
-    decade: '2010s',
-    title: 'Prestige & Platforms',
-    subtitle: 'Awards-season favorites meet bold streaming originals',
-    color: '#6a4c93'
-  },
-  {
-    decade: '2020s',
-    title: 'Hybrid Horizons',
-    subtitle: 'Streaming-first releases and theatrical event cinema converge',
-    color: '#ff7f51'
-  }
 ];
 
 const ThematicJourneys = () => {
