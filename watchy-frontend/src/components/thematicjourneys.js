@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './ThematicJourneys.css';
+import './thematicjourneys.css';
 import { searchMoviesByPeriod } from '../services/api';
 
 const ThematicJourneys = () => {
