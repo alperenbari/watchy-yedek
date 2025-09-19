@@ -79,7 +79,6 @@ const ThematicJourneys = () => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
