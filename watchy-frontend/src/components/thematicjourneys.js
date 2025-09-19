@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+
 import './thematicjourneys.css';
 import { searchMoviesByPeriod } from '../services/api';
 
