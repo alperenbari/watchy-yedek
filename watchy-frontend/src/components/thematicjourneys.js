@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+
 import './thematicjourneys.css';
 import { searchMoviesByPeriod } from '../services/api';
 
@@ -78,6 +78,7 @@ const DECADE_CONFIGS = [
 const ThematicJourneys = () => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchMovies = async () => {
