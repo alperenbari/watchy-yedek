@@ -43,6 +43,7 @@ function ResultList({ searchResults, platforms, hasCompletedSearch }) {
           key={movie.movie_id}
           movie={movie}
           platforms={platforms[movie.movie_id]?.platforms || []}
+          platformLink={platforms[movie.movie_id]?.link || ''}
         />
       ))}
     </div>

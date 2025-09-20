@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-function MovieCard({ movie, platforms }) {
+function MovieCard({ movie, platforms, platformLink }) {
   const uniquePlatforms = Array.isArray(platforms)
     ? platforms.filter((platform, index, list) => {
         if (platform?.provider_id) {
@@ -78,34 +78,62 @@ function MovieCard({ movie, platforms }) {
             alignItems: 'center'
           }}
         >
-          {uniquePlatforms.map((platform) => (
-            <div
-              key={platform?.provider_id || platform?.provider_name}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                backgroundColor: '#1c1c1c',
-                borderRadius: '20px',
-                padding: '4px 8px',
-                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.4)'
-              }}
-            >
-              <img
-                src={
-                  platform?.logo_path === '/yt'
-                    ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
-                    : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
-                }
-                alt={platform?.provider_name}
-                title={platform?.provider_name}
-                style={{ height: '18px', width: 'auto' }}
-              />
-              <span style={{ fontSize: '11px', color: '#f1f1f1' }}>
-                {platform?.provider_name}
-              </span>
-            </div>
-          ))}
+          {uniquePlatforms.map((platform) => {
+            const badgeStyle = {
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#1c1c1c',
+              borderRadius: '20px',
+              padding: '4px 8px',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.4)'
+            };
+
+            const content = (
+              <>
+                <img
+                  src={
+                    platform?.logo_path === '/yt'
+                      ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                      : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                  }
+                  alt={platform?.provider_name}
+                  title={platform?.provider_name}
+                  style={{ height: '18px', width: 'auto' }}
+                />
+                <span style={{ fontSize: '11px', color: '#f1f1f1' }}>
+                  {platform?.provider_name}
+                </span>
+              </>
+            );
+
+            if (platformLink) {
+              return (
+                <a
+                  key={platform?.provider_id || platform?.provider_name}
+                  href={platformLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    ...badgeStyle,
+                    textDecoration: 'none',
+                    color: 'inherit'
+                  }}
+                >
+                  {content}
+                </a>
+              );
+            }
+
+            return (
+              <div
+                key={platform?.provider_id || platform?.provider_name}
+                style={badgeStyle}
+              >
+                {content}
+              </div>
+            );
+          })}
         </div>
       </div>
       <div style={{ textAlign: 'center' }}>
