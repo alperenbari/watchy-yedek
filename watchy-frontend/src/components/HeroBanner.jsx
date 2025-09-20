@@ -124,19 +124,30 @@ const HeroBanner = ({ title, onSearch }) => {
     // TODO: Login modal veya sayfasına yönlendirme
   };
 
-  // Başlıktaki "en iyileri" kısmını vurgula
   const highlightTitle = (text) => {
-    const parts = text.split('en iyileri');
-    if (parts.length > 1) {
-      return (
-        <>
-          {parts[0]}
-          <span className="hero-highlight">en iyileri</span>
-          {parts[1]}
-        </>
-      );
-    }
-    return text;
+    const segments = text.split(/(izlenebilir|iyi)/gi);
+
+    return segments.map((segment, index) => {
+      const lower = segment.toLowerCase();
+
+      if (lower === 'izlenebilir') {
+        return (
+          <span key={`highlight-izlenebilir-${index}`} className="hero-highlight hero-highlight-watchable">
+            {segment}
+          </span>
+        );
+      }
+
+      if (lower === 'iyi') {
+        return (
+          <span key={`highlight-iyi-${index}`} className="hero-highlight hero-highlight-quality">
+            {segment}
+          </span>
+        );
+      }
+
+      return <React.Fragment key={`highlight-fragment-${index}`}>{segment}</React.Fragment>;
+    });
   };
 
   return (
@@ -164,6 +175,11 @@ const HeroBanner = ({ title, onSearch }) => {
             <div className="hero-title">
               <h1>{highlightTitle(title)}</h1>
             </div>
+
+            <p className="hero-note">
+              Watchy'de yalnızca şu anda platformlarda bulunan en iyi içerikler var. Platformlarda kaybolma. Watchy'de
+              içeriğine kolayca seç ve izlemeye başla!
+            </p>
 
             <div className="hero-search-container">
               <div className="hero-search-box">

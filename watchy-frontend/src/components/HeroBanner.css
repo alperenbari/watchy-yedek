@@ -2,15 +2,16 @@
 
 .hero-banner {
   position: relative;
-  min-height: 320px;
-  background: #0a0a0a;
+  width: 100%;
+  background: #050505;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  margin: -20px -20px 30px -20px; /* App.js padding'ini nötralize et */
+  padding: 48px 0;
+  margin: -20px -20px 40px -20px; /* App.js padding'ini nötralize et */
 }
 
 /* Film grain animasyonu */
@@ -156,18 +157,17 @@
 .hero-content-container {
   position: relative;
   z-index: 10;
-  width: 90%;
-  max-width: 1200px;
-  padding: 32px 48px;
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  width: 100%;
+  padding: 32px 5vw;
+  background: linear-gradient(90deg, rgba(10, 10, 10, 0.92) 0%, rgba(20, 20, 20, 0.85) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   animation: fadeInUp 0.8s ease-out;
 }
 
@@ -185,10 +185,10 @@
 /* Üst satır - Logo, Başlık & Arama, Login */
 .hero-top-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 32px;
+  gap: clamp(24px, 5vw, 48px);
 }
 
 /* Logo container */
@@ -211,7 +211,7 @@
 }
 
 .hero-logo {
-  height: 80px;
+  height: 72px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
 }
@@ -223,7 +223,7 @@
   align-items: center;
   gap: 16px;
   text-align: center;
-  align-self: flex-start;
+  padding: 0 2vw;
 }
 
 /* Ana başlık */
@@ -248,13 +248,32 @@
 }
 
 .hero-highlight {
-  color: #00ff88;
   font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-highlight-watchable {
+  color: #0cf5ff;
+  text-shadow: 0 0 12px rgba(12, 245, 255, 0.5);
+}
+
+.hero-highlight-quality {
+  color: #00ff88;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.45);
+}
+
+.hero-note {
+  max-width: 640px;
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
 }
 
 /* Login butonu */
 .hero-login-button {
-  padding: 12px 28px;
+  padding: 12px 32px;
   background: linear-gradient(135deg, #00ff88 0%, #00cc6f 100%);
   color: #0a0a0a;
   border: none;
@@ -300,7 +319,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 0;
+  margin-top: 8px;
   animation: slideInUp 1.4s ease-out;
 }
 
@@ -322,11 +341,6 @@
 }
 
 @media (max-width: 900px) {
-  .hero-content-container {
-    padding: 28px 24px;
-    width: 95%;
-  }
-
   .hero-top-row {
     flex-direction: column;
     align-items: center;
@@ -337,12 +351,12 @@
     justify-content: center;
   }
 
-  .hero-center-stack {
-    width: 100%;
-  }
-
   .hero-login-button {
     align-self: center;
+  }
+
+  .hero-note {
+    text-align: center;
   }
 }
 
