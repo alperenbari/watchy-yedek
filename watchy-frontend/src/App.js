@@ -21,10 +21,13 @@ function App() {
   };
 
   return (
-    <div className="App" style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh', padding: '20px' }}>
+    <div
+      className="App"
+      style={{ backgroundColor: '#ffffff', color: '#111827', minHeight: '100vh', padding: '20px' }}
+    >
       {/* Sinematik HeroBanner */}
       <HeroBanner
-        title="Sadece izlenebilir ve iyi içerikler!"
+        title="Sadece İZLENEBİLİR ve EN İYİ içerikler!"
         onSearch={handleHeroSearch}
       />
 
