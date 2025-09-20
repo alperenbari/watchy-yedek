@@ -9,8 +9,8 @@ function App() {
   const {
     searchResults,
     platforms,
-    scores,
     loading,
+    hasCompletedSearch,
     handleSearch
   } = useSearch();
 
@@ -45,7 +45,7 @@ function App() {
         <ResultList
           searchResults={searchResults}
           platforms={platforms}
-          scores={scores}
+          hasCompletedSearch={hasCompletedSearch}
         />
       </div>
     </div>

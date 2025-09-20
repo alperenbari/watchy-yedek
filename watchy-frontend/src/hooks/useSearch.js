@@ -3,16 +3,15 @@ import { useState } from 'react';
 import {
   searchMovies,
   searchMoviesByYear,
-  getPlatforms,
-  getWatchyScore
+  getPlatforms
 } from '../services/api';
 
 export const useSearch = () => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [platforms, setPlatforms] = useState({});
-  const [scores, setScores] = useState({});
   const [loading, setLoading] = useState(false);
+  const [hasCompletedSearch, setHasCompletedSearch] = useState(false);
   const [selectedDecade, setSelectedDecade] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -23,31 +22,30 @@ export const useSearch = () => {
   const resetResults = () => {
     setSearchResults([]);
     setPlatforms({});
-    setScores({});
+    setHasCompletedSearch(false);
   };
 
   const populateMovieDetails = async (movies) => {
-    if (!movies?.length) return;
+    if (!movies?.length) return [];
 
     const details = await Promise.all(
       movies.map(async (movie) => {
         try {
-          const [platformRes, scoreRes] = await Promise.all([
-            getPlatforms(movie.movie_id),
-            getWatchyScore(movie.movie_id)
-          ]);
+          const platformRes = await getPlatforms(movie.movie_id);
 
           return {
             id: movie.movie_id,
-            platforms: platformRes,
-            score: scoreRes?.watchy_score ?? null
+            platforms: Array.isArray(platformRes?.platforms)
+              ? platformRes.platforms
+              : [],
+            link: platformRes?.link ?? '',
           };
         } catch (error) {
           console.error(`Film detayları alınamadı (${movie.movie_id}):`, error);
           return {
             id: movie.movie_id,
             platforms: [],
-            score: null
+            link: ''
           };
         }
       })
@@ -55,19 +53,16 @@ export const useSearch = () => {
 
     setPlatforms((prev) => {
       const next = { ...prev };
-      details.forEach(({ id, platforms: platformList }) => {
-        next[id] = platformList;
+      details.forEach(({ id, platforms: platformList, link }) => {
+        next[id] = {
+          platforms: platformList,
+          link
+        };
       });
       return next;
     });
 
-    setScores((prev) => {
-      const next = { ...prev };
-      details.forEach(({ id, score }) => {
-        next[id] = score;
-      });
-      return next;
-    });
+    return details;
   };
 
   const handleSearch = async (searchTerm) => {
@@ -88,8 +83,20 @@ export const useSearch = () => {
 
     try {
       const data = await searchMovies(trimmedQuery);
-      setSearchResults(data);
-      await populateMovieDetails(data);
+      const details = await populateMovieDetails(data);
+
+      const availableIds = new Set(
+        details
+          .filter(({ platforms: platformList }) => platformList?.length)
+          .map(({ id }) => id)
+      );
+
+      const filteredResults = data.filter((movie) =>
+        availableIds.has(movie.movie_id)
+      );
+
+      setSearchResults(filteredResults);
+      setHasCompletedSearch(true);
     } catch (err) {
       console.error('Arama hatası:', err);
     } finally {
@@ -105,8 +112,20 @@ export const useSearch = () => {
     setLoading(true);
     try {
       const data = await searchMoviesByYear(year);
-      setSearchResults(data);
-      await populateMovieDetails(data);
+      const details = await populateMovieDetails(data);
+
+      const availableIds = new Set(
+        details
+          .filter(({ platforms: platformList }) => platformList?.length)
+          .map(({ id }) => id)
+      );
+
+      const filteredResults = data.filter((movie) =>
+        availableIds.has(movie.movie_id)
+      );
+
+      setSearchResults(filteredResults);
+      setHasCompletedSearch(true);
     } catch (err) {
       console.error('Yıl bazlı arama hatası:', err);
     } finally {
@@ -118,7 +137,6 @@ export const useSearch = () => {
     query, setQuery,
     searchResults,
     platforms,
-    scores,
     loading,
     selectedDecade, setSelectedDecade,
     selectedYear, setSelectedYear,
@@ -126,6 +144,7 @@ export const useSearch = () => {
     showDecades, setShowDecades,
     decades,
     handleSearch,
-    handleYearSelect
+    handleYearSelect,
+    hasCompletedSearch
   };
 };
