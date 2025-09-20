@@ -47,9 +47,6 @@ export const searchMoviesByYear = (year) =>
 export const getPlatforms = (movieId) =>
   fetchJson(`/platforms/${encodeURIComponent(movieId)}`, 'Platform verisi alınamadı');
 
-export const getWatchyScore = (movieId) =>
-  fetchJson(`/watchy-score/${encodeURIComponent(movieId)}`, 'Watchy puanı alınamadı');
-
 export const searchMoviesByPeriod = (from, to) => {
   const params = new URLSearchParams({ from: String(from), to: String(to) });
   return fetchJson(

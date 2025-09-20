@@ -3,15 +3,13 @@ import { useState } from 'react';
 import {
   searchMovies,
   searchMoviesByYear,
-  getPlatforms,
-  getWatchyScore
+  getPlatforms
 } from '../services/api';
 
 export const useSearch = () => {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [platforms, setPlatforms] = useState({});
-  const [scores, setScores] = useState({});
   const [loading, setLoading] = useState(false);
   const [hasCompletedSearch, setHasCompletedSearch] = useState(false);
   const [selectedDecade, setSelectedDecade] = useState(null);
@@ -24,7 +22,6 @@ export const useSearch = () => {
   const resetResults = () => {
     setSearchResults([]);
     setPlatforms({});
-    setScores({});
     setHasCompletedSearch(false);
   };
 
@@ -34,10 +31,7 @@ export const useSearch = () => {
     const details = await Promise.all(
       movies.map(async (movie) => {
         try {
-          const [platformRes, scoreRes] = await Promise.all([
-            getPlatforms(movie.movie_id),
-            getWatchyScore(movie.movie_id)
-          ]);
+          const platformRes = await getPlatforms(movie.movie_id);
 
           return {
             id: movie.movie_id,
@@ -45,15 +39,12 @@ export const useSearch = () => {
               ? platformRes.platforms
               : [],
             link: platformRes?.link ?? '',
-            score: scoreRes?.watchy_score ?? null
           };
         } catch (error) {
           console.error(`Film detayları alınamadı (${movie.movie_id}):`, error);
           return {
             id: movie.movie_id,
             platforms: [],
-            link: '',
-            score: null
           };
         }
       })
@@ -69,15 +60,6 @@ export const useSearch = () => {
       });
       return next;
     });
-
-    setScores((prev) => {
-      const next = { ...prev };
-      details.forEach(({ id, score }) => {
-        next[id] = score;
-      });
-      return next;
-    });
-
     return details;
   };
 
@@ -153,7 +135,6 @@ export const useSearch = () => {
     query, setQuery,
     searchResults,
     platforms,
-    scores,
     loading,
     selectedDecade, setSelectedDecade,
     selectedYear, setSelectedYear,
