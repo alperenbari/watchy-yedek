@@ -69,7 +69,6 @@ router.get('/', async (req, res) => {
             director,
             cast
           });
-          console.log(`✅ Film eklendi: ${film.title}`);
         }
       }
 
