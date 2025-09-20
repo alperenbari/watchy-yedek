@@ -64,12 +64,24 @@ export const useSearch = () => {
   };
 
   const handleSearch = async (searchTerm) => {
-    const effectiveQuery = typeof searchTerm === 'string' ? searchTerm : query;
-    const trimmedQuery = effectiveQuery.trim();
+    const isObjectPayload = typeof searchTerm === 'object' && searchTerm !== null;
+    const selectedMovie = isObjectPayload
+      ? searchTerm.movie || (searchTerm.movie_id ? searchTerm : null)
+      : null;
 
-    if (!trimmedQuery) return;
+    const resolvedQuery = isObjectPayload
+      ? (searchTerm.query || searchTerm.title || selectedMovie?.title || '')
+      : typeof searchTerm === 'string'
+      ? searchTerm
+      : query;
 
-    if (trimmedQuery !== query) {
+    const trimmedQuery = resolvedQuery.trim();
+
+    if (!trimmedQuery && !selectedMovie) {
+      return;
+    }
+
+    if (trimmedQuery && trimmedQuery !== query) {
       setQuery(trimmedQuery);
     }
 
@@ -80,7 +92,7 @@ export const useSearch = () => {
     setLoading(true);
 
     try {
-      const data = await searchMovies(trimmedQuery);
+      const data = selectedMovie ? [selectedMovie] : await searchMovies(trimmedQuery);
       const details = await populateMovieDetails(data);
 
       const availableIds = new Set(

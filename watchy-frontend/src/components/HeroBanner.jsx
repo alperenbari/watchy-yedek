@@ -19,7 +19,7 @@ const HeroBanner = ({ title, onSearch }) => {
       return;
     }
 
-    onSearch(trimmedQuery);
+    onSearch({ query: trimmedQuery });
     setSearchQuery(trimmedQuery);
     setSuggestions([]);
     setIsSuggestionOpen(false);
@@ -69,7 +69,7 @@ const HeroBanner = ({ title, onSearch }) => {
     setIsSuggestionOpen(false);
 
     if (onSearch) {
-      onSearch(movie.title);
+      onSearch({ query: movie.title, movie });
     }
   };
 

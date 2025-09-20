@@ -15,8 +15,8 @@ function App() {
   } = useSearch();
 
   // HeroBanner'dan gelen arama işlemi
-  const handleHeroSearch = (searchQuery) => {
-    handleSearch(searchQuery);
+  const handleHeroSearch = (searchPayload) => {
+    handleSearch(searchPayload);
   };
 
   return (
