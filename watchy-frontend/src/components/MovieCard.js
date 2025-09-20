@@ -107,11 +107,14 @@ function MovieCard({ movie, platforms, platformLink }) {
               </>
             );
 
-            if (platformLink) {
+            const linkForPlatform =
+              platform?.direct_link || platform?.external_link || platformLink;
+
+            if (linkForPlatform) {
               return (
                 <a
                   key={platform?.provider_id || platform?.provider_name}
-                  href={platformLink}
+                  href={linkForPlatform}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
