@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import './thematicjourneys.css';
 import { searchMoviesByPeriod } from '../services/api';
 
+const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w185';
+
 const DECADE_CONFIGS = [
   {
     id: '1960s',
@@ -79,6 +81,10 @@ const DECADE_CONFIGS = [
 const ThematicJourneys = () => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
+  const [expandedDecade, setExpandedDecade] = useState(null);
+  const [detailMovies, setDetailMovies] = useState({});
+  const [detailLoadingDecade, setDetailLoadingDecade] = useState(null);
+  const [detailError, setDetailError] = useState(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -117,6 +123,61 @@ const ThematicJourneys = () => {
     [moviesByDecade]
   );
 
+  const handleJourneySelect = async (journey) => {
+    if (!journey) return;
+
+    if (expandedDecade === journey.id) {
+      setExpandedDecade(null);
+      setDetailError(null);
+      return;
+    }
+
+    setExpandedDecade(journey.id);
+    setDetailError(null);
+
+    if (detailMovies[journey.id]) {
+      return;
+    }
+
+    try {
+      setDetailLoadingDecade(journey.id);
+      const movies = await searchMoviesByPeriod(journey.period[0], journey.period[1]);
+
+      const formattedMovies = (Array.isArray(movies) ? movies : [])
+        .slice(0, 12)
+        .map((movie) => ({
+          id: movie.movie_id || movie.id,
+          title: movie.title,
+          posterUrl: movie.poster_path ? `${POSTER_BASE_URL}${movie.poster_path}` : null,
+          director: movie.director || null,
+          cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
+          releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null
+        }));
+
+      setDetailMovies((prev) => ({
+        ...prev,
+        [journey.id]: formattedMovies
+      }));
+    } catch (error) {
+      console.error('Error fetching decade highlights:', error);
+      setDetailError('Bu dönemin popüler filmleri alınırken bir sorun oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setDetailLoadingDecade(null);
+    }
+  };
+
+  const handleKeyPress = (event, journey) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleJourneySelect(journey);
+    }
+  };
+
+  const activeJourney = useMemo(
+    () => journeys.find((journey) => journey.id === expandedDecade) || null,
+    [expandedDecade, journeys]
+  );
+
   if (loading) {
     return (
       <section className="thematic-journeys">
@@ -131,10 +192,15 @@ const ThematicJourneys = () => {
       <h2 className="section-title">Tematik Yolculuklar</h2>
       <div className="journeys-container">
         {journeys.map((journey) => (
-          <div 
-            key={journey.id} 
-            className="journey-card"
+          <div
+            key={journey.id}
+            className={`journey-card${expandedDecade === journey.id ? ' journey-card--active' : ''}`}
             style={{ backgroundColor: journey.color }}
+            onClick={() => handleJourneySelect(journey)}
+            onKeyDown={(event) => handleKeyPress(event, journey)}
+            role="button"
+            tabIndex={0}
+            aria-expanded={expandedDecade === journey.id}
           >
             <div className="journey-header">
               <h3 className="journey-title">{journey.title}</h3>
@@ -168,6 +234,72 @@ const ThematicJourneys = () => {
           </div>
         ))}
       </div>
+
+      {activeJourney && (
+        <div className="journey-detail-panel">
+          <div className="journey-detail-header">
+            <div className="journey-detail-headline">
+              <span className="journey-detail-years">
+                {activeJourney.period[0]} – {activeJourney.period[1]}
+              </span>
+              <h3 className="journey-detail-title">{activeJourney.title}</h3>
+              <p className="journey-detail-subtitle">{activeJourney.subtitle}</p>
+            </div>
+
+            <button
+              type="button"
+              className="journey-detail-close"
+              onClick={() => {
+                setExpandedDecade(null);
+                setDetailError(null);
+              }}
+            >
+              Kapat
+            </button>
+          </div>
+
+          <p className="journey-detail-description">{activeJourney.description}</p>
+
+          {detailLoadingDecade === activeJourney.id ? (
+            <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
+          ) : detailError ? (
+            <div className="journey-detail-error">{detailError}</div>
+          ) : (detailMovies[activeJourney.id] || []).length === 0 ? (
+            <div className="journey-detail-empty">Bu dönem için film bulunamadı.</div>
+          ) : (
+            <div className="detail-movie-list">
+              {(detailMovies[activeJourney.id] || []).map((movie) => (
+                <article key={movie.id} className="detail-movie-card">
+                  <div className="detail-movie-poster">
+                    {movie.posterUrl ? (
+                      <img src={movie.posterUrl} alt={movie.title} />
+                    ) : (
+                      <div className="detail-movie-placeholder" aria-hidden="true">
+                        🎞️
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="detail-movie-meta">
+                    <h4 className="detail-movie-title">
+                      {movie.title}
+                      {movie.releaseYear ? <span className="detail-movie-year"> ({movie.releaseYear})</span> : null}
+                    </h4>
+                    <p className="detail-movie-director">
+                      {movie.director ? `Yönetmen: ${movie.director}` : 'Yönetmen bilgisi bulunamadı'}
+                    </p>
+                    {movie.cast.length > 0 && (
+                      <p className="detail-movie-cast">
+                        Başroller: {movie.cast.join(', ')}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 };
