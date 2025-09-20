@@ -149,20 +149,8 @@ async function getWatchProviders(movieId) {
   };
 }
 
-async function getMovieTitle(movieId) {
-  ensureCredentials();
-  const res = await axios.get(
-    `https://api.themoviedb.org/3/movie/${movieId}`,
-    withTmdbAuth({ params: { language: 'en-US' } })
-  );
-  return res.data.title;
-}
-
-
-
 module.exports = {
   searchMoviesWithCredits,
   getCredits,
-  getWatchProviders,
-  getMovieTitle
+  getWatchProviders
 };
