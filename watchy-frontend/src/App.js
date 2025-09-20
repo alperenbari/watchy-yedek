@@ -11,7 +11,8 @@ function App() {
     platforms,
     loading,
     hasCompletedSearch,
-    handleSearch
+    handleSearch,
+    resetResults
   } = useSearch();
 
   // HeroBanner'dan gelen arama işlemi
@@ -27,7 +28,7 @@ function App() {
         onSearch={handleHeroSearch}
       />
 
-      <ThematicJourneys />
+      <ThematicJourneys onContentChange={resetResults} />
 
       {/* Yükleniyor durumu */}
       {loading && (

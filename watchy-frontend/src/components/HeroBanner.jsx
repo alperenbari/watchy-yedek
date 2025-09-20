@@ -153,95 +153,92 @@ const HeroBanner = ({ title, onSearch }) => {
 
       {/* Ana içerik - glassmorphism container */}
       <div className="hero-content-container">
-        {/* Üst kısım: Logo ve Login */}
-        <div className="hero-header">
+        <div className="hero-top-row">
           {/* Logo */}
           <div className="hero-logo-container">
             <img src={logo} alt="Watchy" className="hero-logo" />
+          </div>
+
+          {/* Başlık ve Arama */}
+          <div className="hero-center-stack">
+            <div className="hero-title">
+              <h1>{highlightTitle(title)}</h1>
+            </div>
+
+            <div className="hero-search-container">
+              <div className="hero-search-box">
+                <input
+                  type="text"
+                  className="hero-search-input"
+                  placeholder="Film adı girin..."
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                />
+                <button className="hero-search-button" onClick={handleSearch}>
+                  <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
+                  </svg>
+                </button>
+                {isSuggestionOpen && (
+                  <div className="hero-suggestions">
+                    {isLoadingSuggestions && (
+                      <div className="hero-suggestions-empty">Filmler aranıyor...</div>
+                    )}
+
+                    {!isLoadingSuggestions && suggestions.length === 0 && (
+                      <div className="hero-suggestions-empty">Uygun film bulunamadı.</div>
+                    )}
+
+                    {!isLoadingSuggestions && suggestions.map((movie) => {
+                      const posterUrl = movie.poster_path
+                        ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
+                        : null;
+
+                      const releaseYear = movie.release_date
+                        ? new Date(movie.release_date).getFullYear()
+                        : null;
+
+                      return (
+                        <button
+                          key={movie.movie_id}
+                          type="button"
+                          className="hero-suggestion-item"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => handleSuggestionSelect(movie)}
+                        >
+                          {posterUrl ? (
+                            <img
+                              src={posterUrl}
+                              alt={movie.title}
+                              className="hero-suggestion-image"
+                            />
+                          ) : (
+                            <div className="hero-suggestion-placeholder">
+                              {movie.title?.[0] ?? '?'}
+                            </div>
+                          )}
+                          <div className="hero-suggestion-info">
+                            <span className="hero-suggestion-title">{movie.title}</span>
+                            {releaseYear && (
+                              <span className="hero-suggestion-meta">{releaseYear}</span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Login butonu */}
           <button className="hero-login-button" onClick={handleLogin}>
             Giriş Yap
           </button>
-        </div>
-
-        {/* Orta kısım: Başlık ve Arama (ortalanmış) */}
-        <div className="hero-center-content">
-          {/* Başlık */}
-          <div className="hero-title">
-            <h1>{highlightTitle(title)}</h1>
-          </div>
-          
-          {/* Arama kutusu */}
-          <div className="hero-search-container">
-            <div className="hero-search-box">
-              <input
-                type="text"
-                className="hero-search-input"
-                placeholder="Film adı girin..."
-                value={searchQuery}
-                onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-              />
-              <button className="hero-search-button" onClick={handleSearch}>
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
-                </svg>
-              </button>
-              {isSuggestionOpen && (
-                <div className="hero-suggestions">
-                  {isLoadingSuggestions && (
-                    <div className="hero-suggestions-empty">Filmler aranıyor...</div>
-                  )}
-
-                  {!isLoadingSuggestions && suggestions.length === 0 && (
-                    <div className="hero-suggestions-empty">Uygun film bulunamadı.</div>
-                  )}
-
-                  {!isLoadingSuggestions && suggestions.map((movie) => {
-                    const posterUrl = movie.poster_path
-                      ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
-                      : null;
-
-                    const releaseYear = movie.release_date
-                      ? new Date(movie.release_date).getFullYear()
-                      : null;
-
-                    return (
-                      <button
-                        key={movie.movie_id}
-                        type="button"
-                        className="hero-suggestion-item"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => handleSuggestionSelect(movie)}
-                      >
-                        {posterUrl ? (
-                          <img
-                            src={posterUrl}
-                            alt={movie.title}
-                            className="hero-suggestion-image"
-                          />
-                        ) : (
-                          <div className="hero-suggestion-placeholder">
-                            {movie.title?.[0] ?? '?'}
-                          </div>
-                        )}
-                        <div className="hero-suggestion-info">
-                          <span className="hero-suggestion-title">{movie.title}</span>
-                          {releaseYear && (
-                            <span className="hero-suggestion-meta">{releaseYear}</span>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </section>

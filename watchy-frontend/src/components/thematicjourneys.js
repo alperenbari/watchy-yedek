@@ -73,7 +73,7 @@ const DECADE_CONFIGS = [
   }
 ];
 
-const ThematicJourneys = () => {
+const ThematicJourneys = ({ onContentChange }) => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedDecade, setExpandedDecade] = useState(null);
@@ -188,6 +188,10 @@ const ThematicJourneys = () => {
       setExpandedDecade(null);
       setDetailError(null);
       return;
+    }
+
+    if (typeof onContentChange === 'function') {
+      onContentChange();
     }
 
     setExpandedDecade(journey.id);

@@ -154,6 +154,7 @@ export const useSearch = () => {
     showDecades, setShowDecades,
     decades,
     handleSearch,
+    resetResults,
     handleYearSelect,
     hasCompletedSearch
   };
