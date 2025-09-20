@@ -28,7 +28,7 @@ const ThematicJourneys = () => {
 
   return (
     <section style={{ padding: '40px 20px' }}>
-      <h2 style={{ fontSize: '22px', marginBottom: '20px', textAlign: 'left' }}>Tematik Yolculuklar</h2>
+      <h2 style={{ fontSize: '22px', marginBottom: '20px', textAlign: 'left' }}>Dönem Filmleri</h2>
       <div style={{ display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '8px' }}>
         {DECADES.map((theme, idx) => (
           <div
