@@ -24,7 +24,7 @@ function App() {
     <div className="App" style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh', padding: '20px' }}>
       {/* Sinematik HeroBanner */}
       <HeroBanner
-        title="Tüm platformlarda sinemanın en iyileri!"
+        title="Sadece izlenebilir ve iyi içerikler!"
         onSearch={handleHeroSearch}
       />
 
