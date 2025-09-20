@@ -38,56 +38,77 @@ async function getCredits(movieId) {
   }
 }
 
-async function searchMoviesWithCredits(query) {
-  ensureCredentials();
-  const MAX_PAGES = 30;
-  const seen = new Set();
-  const filtered = [];
-  const sortOptions = ['popularity.desc', 'release_date.desc'];
+const SEARCH_LANGUAGES = ['tr-TR', 'en-US'];
+const MAX_SEARCH_PAGES = 5;
 
-  for (const sort of sortOptions) {
-    for (let page = 1; page <= MAX_PAGES; page++) {
+async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(rawQuery || '')) {
+  ensureCredentials();
+
+  const trimmedQuery = typeof rawQuery === 'string' ? rawQuery.trim() : '';
+  const sanitizedQuery = trimmedQuery || normalizedQuery || '';
+
+  if (!sanitizedQuery) {
+    return [];
+  }
+
+  const seen = new Set();
+  const resultsWithCredits = [];
+
+  for (const language of SEARCH_LANGUAGES) {
+    for (let page = 1; page <= MAX_SEARCH_PAGES; page++) {
       const response = await axios.get(
-        'https://api.themoviedb.org/3/discover/movie',
+        'https://api.themoviedb.org/3/search/movie',
         withTmdbAuth({
           params: {
-            with_origin_country: 'US',
-            language: 'en-US',
+            query: sanitizedQuery,
+            language,
             include_adult: false,
-            sort_by: sort,
             page
           }
         })
       );
 
-      const results = response.data.results || [];
+      const movies = response.data?.results || [];
 
-      const matches = results.filter(film =>
-        film.title && normalize(film.title).includes(query)
-      );
-
-      for (const film of matches) {
-        if (!seen.has(film.id)) {
-          seen.add(film.id);
-          const { director, cast } = await getCredits(film.id);
-
-          filtered.push({
-            movie_id: film.id,
-            title: film.title,
-            poster_path: film.poster_path,
-            overview: film.overview,
-            release_date: film.release_date,
-            director,
-            cast
-          });
+      for (const film of movies) {
+        if (!film?.id || seen.has(film.id)) {
+          continue;
         }
+
+        const normalizedTitle = film.title ? normalize(film.title) : '';
+        const normalizedOriginal = film.original_title ? normalize(film.original_title) : '';
+
+        if (
+          normalizedQuery &&
+          !normalizedTitle.includes(normalizedQuery) &&
+          !normalizedOriginal.includes(normalizedQuery)
+        ) {
+          continue;
+        }
+
+        seen.add(film.id);
+
+        const { director, cast } = await getCredits(film.id);
+
+        resultsWithCredits.push({
+          movie_id: film.id,
+          title: film.title,
+          poster_path: film.poster_path,
+          overview: film.overview,
+          release_date: film.release_date,
+          director,
+          cast
+        });
       }
 
-      if (response.data.total_pages <= page) break;
+      const totalPages = response.data?.total_pages ?? 0;
+      if (totalPages <= page) {
+        break;
+      }
     }
   }
 
-  return filtered;
+  return resultsWithCredits;
 }
 
 const REGION_TURKEY = 'TR';

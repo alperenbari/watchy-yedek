@@ -10,7 +10,7 @@ router.get('/:query', async (req, res) => {
   const query = normalize(rawQuery);
 
   try {
-    const results = await searchMoviesWithCredits(query);
+    const results = await searchMoviesWithCredits(rawQuery, query);
     res.json(results);
   } catch (err) {
     const status = err.response?.status || (err.message === missingCredentialsMessage() ? 500 : err.status) || 500;
