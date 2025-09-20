@@ -146,7 +146,8 @@ const ThematicJourneys = () => {
                 return {
                   ...movie,
                   id: movieId,
-                  platforms: platformUpdates[movieId].platforms
+                  platforms: platformUpdates[movieId].platforms,
+                  link: platformUpdates[movieId].link
                 };
               })
             );
@@ -235,7 +236,8 @@ const ThematicJourneys = () => {
             director: movie.director || null,
             cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
             releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null,
-            platforms: platformUpdates[movieId].platforms
+            platforms: platformUpdates[movieId].platforms,
+            link: platformUpdates[movieId].link
           };
         })
       );
@@ -305,6 +307,8 @@ const ThematicJourneys = () => {
               <div className="journey-movies">
                 {journey.movies.map((movie, index) => {
                   const uniquePlatforms = dedupePlatforms(movie.platforms);
+                  const movieId = movie.id || movie.movie_id;
+                  const movieLink = movie.link || (movieId ? platformsByMovieId[movieId]?.link : '');
 
                   return (
                     <div key={movie.id || movie.movie_id || index} className="movie-poster">
@@ -321,23 +325,41 @@ const ThematicJourneys = () => {
                       )}
 
                       <div className="movie-platforms">
-                        {uniquePlatforms.map((platform) => (
-                          <div
-                            key={platform?.provider_id || platform?.provider_name}
-                            className="platform-badge"
-                          >
-                            <img
-                              src={
-                                platform?.logo_path === '/yt'
-                                  ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
-                                  : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
-                              }
-                              alt={platform?.provider_name}
-                              title={platform?.provider_name}
-                            />
-                            <span>{platform?.provider_name}</span>
-                          </div>
-                        ))}
+                        {uniquePlatforms.map((platform) => {
+                          const badgeContent = (
+                            <>
+                              <img
+                                src={
+                                  platform?.logo_path === '/yt'
+                                    ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                    : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                                }
+                                alt={platform?.provider_name}
+                                title={platform?.provider_name}
+                              />
+                              <span>{platform?.provider_name}</span>
+                            </>
+                          );
+
+                          return movieLink ? (
+                            <a
+                              key={platform?.provider_id || platform?.provider_name}
+                              className="platform-badge"
+                              href={movieLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {badgeContent}
+                            </a>
+                          ) : (
+                            <div
+                              key={platform?.provider_id || platform?.provider_name}
+                              className="platform-badge"
+                            >
+                              {badgeContent}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -389,6 +411,7 @@ const ThematicJourneys = () => {
             <div className="detail-movie-list">
               {(detailMovies[activeJourney.id] || []).map((movie) => {
                 const uniquePlatforms = dedupePlatforms(movie.platforms);
+                const movieLink = movie.link || (movie.id ? platformsByMovieId[movie.id]?.link : '');
 
                 return (
                   <article key={movie.id} className="detail-movie-card">
@@ -416,23 +439,41 @@ const ThematicJourneys = () => {
                       </p>
                     )}
                     <div className="detail-movie-platforms">
-                      {uniquePlatforms.map((platform) => (
-                        <div
-                          key={platform?.provider_id || platform?.provider_name}
-                          className="platform-badge"
-                        >
-                          <img
-                            src={
-                              platform?.logo_path === '/yt'
-                                ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
-                                : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
-                            }
-                            alt={platform?.provider_name}
-                            title={platform?.provider_name}
-                          />
-                          <span>{platform?.provider_name}</span>
-                        </div>
-                      ))}
+                      {uniquePlatforms.map((platform) => {
+                        const badgeContent = (
+                          <>
+                            <img
+                              src={
+                                platform?.logo_path === '/yt'
+                                  ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                  : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                              }
+                              alt={platform?.provider_name}
+                              title={platform?.provider_name}
+                            />
+                            <span>{platform?.provider_name}</span>
+                          </>
+                        );
+
+                        return movieLink ? (
+                          <a
+                            key={platform?.provider_id || platform?.provider_name}
+                            className="platform-badge"
+                            href={movieLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {badgeContent}
+                          </a>
+                        ) : (
+                          <div
+                            key={platform?.provider_id || platform?.provider_name}
+                            className="platform-badge"
+                          >
+                            {badgeContent}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </article>
