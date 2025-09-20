@@ -184,7 +184,7 @@ const ThematicJourneys = () => {
 
   return (
     <section className="thematic-journeys">
-      <h2 className="section-title">Tematik Yolculuklar</h2>
+      <h2 className="section-title">Dönem Filmleri</h2>
       <div className="journeys-container">
         {journeys.map((journey) => (
           <div

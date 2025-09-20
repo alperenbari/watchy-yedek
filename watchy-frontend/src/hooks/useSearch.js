@@ -45,7 +45,6 @@ export const useSearch = () => {
           return {
             id: movie.movie_id,
             platforms: [],
-            link: ''
           };
         }
       })
@@ -61,7 +60,6 @@ export const useSearch = () => {
       });
       return next;
     });
-
     return details;
   };
 
