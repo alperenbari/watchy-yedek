@@ -86,16 +86,70 @@ async function searchMoviesWithCredits(query) {
   return filtered;
 }
 
+const REGION_PRIORITY = ['TR', 'US', 'GB', 'CA'];
+const CATEGORY_PRIORITY = ['flatrate', 'free', 'ads', 'rent', 'buy'];
+
 async function getWatchProviders(movieId) {
   ensureCredentials();
   const res = await axios.get(
     `https://api.themoviedb.org/3/movie/${movieId}/watch/providers`,
     withTmdbAuth()
   );
-  return {
-    platforms: res.data?.results?.US?.flatrate || [],
-    link: res.data?.results?.US?.link || ''
-  };
+
+  const results = res.data?.results || {};
+
+  for (const regionCode of REGION_PRIORITY) {
+    const regionInfo = results[regionCode];
+    if (!regionInfo) {
+      continue;
+    }
+
+    const providerMap = new Map();
+
+    CATEGORY_PRIORITY.forEach((category) => {
+      const providers = Array.isArray(regionInfo[category])
+        ? regionInfo[category]
+        : [];
+
+      providers.forEach((provider) => {
+        const key = provider?.provider_id || provider?.provider_name;
+        if (!key) return;
+
+        const existing = providerMap.get(key);
+        if (
+          !existing ||
+          CATEGORY_PRIORITY.indexOf(category) <
+            CATEGORY_PRIORITY.indexOf(existing.availability)
+        ) {
+          providerMap.set(key, {
+            ...provider,
+            availability: category,
+            region: regionCode
+          });
+        }
+      });
+    });
+
+    if (providerMap.size) {
+      const platforms = Array.from(providerMap.values()).sort((a, b) => {
+        const aPriority = a.display_priority ?? Number.MAX_SAFE_INTEGER;
+        const bPriority = b.display_priority ?? Number.MAX_SAFE_INTEGER;
+
+        if (aPriority !== bPriority) {
+          return aPriority - bPriority;
+        }
+
+        return a.provider_name.localeCompare(b.provider_name);
+      });
+
+      return {
+        platforms,
+        link: regionInfo.link || ''
+      };
+    }
+  }
+
+  return { platforms: [], link: '' };
 }
 
 async function getMovieTitle(movieId) {
