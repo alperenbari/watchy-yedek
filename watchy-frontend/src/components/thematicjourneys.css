@@ -25,6 +25,25 @@
   min-height: 400px;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, outline 0.2s ease;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+}
+
+.journey-card:hover,
+.journey-card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.28);
+}
+
+.journey-card:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 4px;
+}
+
+.journey-card--active {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 46px rgba(0, 0, 0, 0.34);
 }
 
 .journey-header {
@@ -125,6 +144,154 @@
   padding: 40px;
 }
 
+.journey-detail-panel {
+  margin-top: 32px;
+  padding: 32px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(24, 24, 27, 0.92), rgba(15, 23, 42, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.45);
+}
+
+.journey-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.journey-detail-headline {
+  max-width: 720px;
+}
+
+.journey-detail-years {
+  display: inline-block;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.72);
+  margin-bottom: 10px;
+}
+
+.journey-detail-title {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.journey-detail-subtitle {
+  font-size: 1.1rem;
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.journey-detail-description {
+  margin-top: 18px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.72);
+}
+
+.journey-detail-close {
+  background: transparent;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  color: rgba(226, 232, 240, 0.9);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.journey-detail-close:hover,
+.journey-detail-close:focus-visible {
+  background: rgba(226, 232, 240, 0.1);
+  color: white;
+  border-color: rgba(226, 232, 240, 0.85);
+}
+
+.journey-detail-loading,
+.journey-detail-empty {
+  padding: 32px;
+  text-align: center;
+  color: rgba(226, 232, 240, 0.75);
+  font-size: 1.1rem;
+}
+
+.journey-detail-error {
+  padding: 24px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fecaca;
+  text-align: center;
+  font-weight: 500;
+}
+
+.detail-movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.detail-movie-card {
+  display: flex;
+  gap: 16px;
+  padding: 18px;
+  background: rgba(30, 41, 59, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(6px);
+}
+
+.detail-movie-poster {
+  flex: 0 0 80px;
+  aspect-ratio: 2 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-movie-placeholder {
+  font-size: 2rem;
+}
+
+.detail-movie-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-movie-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.detail-movie-year {
+  color: rgba(148, 163, 184, 0.9);
+  font-weight: 500;
+}
+
+.detail-movie-director {
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.detail-movie-cast {
+  font-size: 0.85rem;
+  color: rgba(148, 163, 184, 0.85);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .journeys-container {
@@ -136,12 +303,31 @@
     padding: 20px;
     min-height: 360px;
   }
-  
+
   .journey-title {
     font-size: 1.6rem;
   }
-  
+
   .journey-subtitle {
     font-size: 1rem;
+  }
+
+  .journey-detail-panel {
+    padding: 24px;
+  }
+
+  .detail-movie-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .detail-movie-poster {
+    flex: 0 0 auto;
+    width: 120px;
+  }
+
+  .detail-movie-meta {
+    align-items: center;
   }
 }
