@@ -326,6 +326,10 @@ const ThematicJourneys = () => {
 
                       <div className="movie-platforms">
                         {uniquePlatforms.map((platform) => {
+                          const linkForPlatform =
+                            platform?.direct_link ||
+                            platform?.external_link ||
+                            movieLink;
                           const badgeContent = (
                             <>
                               <img
@@ -341,11 +345,11 @@ const ThematicJourneys = () => {
                             </>
                           );
 
-                          return movieLink ? (
+                          return linkForPlatform ? (
                             <a
                               key={platform?.provider_id || platform?.provider_name}
                               className="platform-badge"
-                              href={movieLink}
+                              href={linkForPlatform}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -440,6 +444,10 @@ const ThematicJourneys = () => {
                     )}
                     <div className="detail-movie-platforms">
                       {uniquePlatforms.map((platform) => {
+                        const linkForPlatform =
+                          platform?.direct_link ||
+                          platform?.external_link ||
+                          movieLink;
                         const badgeContent = (
                           <>
                             <img
@@ -455,11 +463,11 @@ const ThematicJourneys = () => {
                           </>
                         );
 
-                        return movieLink ? (
+                        return linkForPlatform ? (
                           <a
                             key={platform?.provider_id || platform?.provider_name}
                             className="platform-badge"
-                            href={movieLink}
+                            href={linkForPlatform}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
