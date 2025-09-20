@@ -99,6 +99,9 @@
   border-radius: 8px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .poster-image {
@@ -117,6 +120,51 @@
   background: rgba(255, 255, 255, 0.1);
   text-align: center;
   padding: 8px;
+}
+
+.journey-empty {
+  flex: 1;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.movie-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(15, 15, 26, 0) 0%, rgba(15, 15, 26, 0.85) 100%);
+  margin-top: auto;
+}
+
+.platform-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(17, 25, 40, 0.78);
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.platform-badge img {
+  height: 18px;
+  width: auto;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+.platform-badge span {
+  font-size: 0.7rem;
+  color: rgba(248, 250, 252, 0.9);
+  white-space: nowrap;
 }
 
 .journey-indicators {
@@ -272,6 +320,13 @@
   gap: 6px;
 }
 
+.detail-movie-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
 .detail-movie-title {
   font-size: 1.05rem;
   font-weight: 600;
@@ -329,5 +384,9 @@
 
   .detail-movie-meta {
     align-items: center;
+  }
+
+  .detail-movie-platforms {
+    justify-content: center;
   }
 }

@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './thematicjourneys.css';
-import { searchMoviesByPeriod } from '../services/api';
+import { getPlatforms, searchMoviesByPeriod } from '../services/api';
 
 const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w185';
 
@@ -80,6 +80,23 @@ const ThematicJourneys = () => {
   const [detailMovies, setDetailMovies] = useState({});
   const [detailLoadingDecade, setDetailLoadingDecade] = useState(null);
   const [detailError, setDetailError] = useState(null);
+  const [platformsByMovieId, setPlatformsByMovieId] = useState({});
+
+  const dedupePlatforms = (platforms) =>
+    Array.isArray(platforms)
+      ? platforms.filter((platform, index, list) => {
+          if (platform?.provider_id) {
+            return (
+              list.findIndex((item) => item?.provider_id === platform.provider_id) === index
+            );
+          }
+
+          return (
+            index ===
+            list.findIndex((item) => item?.provider_name === platform?.provider_name)
+          );
+        })
+      : [];
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -92,13 +109,58 @@ const ThematicJourneys = () => {
           )
         );
 
-        const normalized = responses.reduce((acc, movies, index) => {
-          const decadeId = DECADE_CONFIGS[index].id;
-          acc[decadeId] = Array.isArray(movies) ? movies.slice(0, 3) : [];
-          return acc;
-        }, {});
+        const platformUpdates = {};
+        const normalized = {};
+
+        await Promise.all(
+          responses.map(async (movies, index) => {
+            const decadeId = DECADE_CONFIGS[index].id;
+            const decadeMovies = Array.isArray(movies) ? movies : [];
+
+            const enriched = await Promise.all(
+              decadeMovies.map(async (movie) => {
+                const movieId = movie.movie_id || movie.id;
+
+                if (!movieId) {
+                  return null;
+                }
+
+                if (!platformUpdates[movieId]) {
+                  try {
+                    const platformRes = await getPlatforms(movieId);
+                    platformUpdates[movieId] = {
+                      platforms: Array.isArray(platformRes?.platforms)
+                        ? platformRes.platforms
+                        : [],
+                      link: platformRes?.link ?? ''
+                    };
+                  } catch (error) {
+                    console.error(`Platform bilgisi alınamadı (${movieId}):`, error);
+                    platformUpdates[movieId] = {
+                      platforms: [],
+                      link: ''
+                    };
+                  }
+                }
+
+                return {
+                  ...movie,
+                  id: movieId,
+                  platforms: platformUpdates[movieId].platforms
+                };
+              })
+            );
+
+            const filtered = enriched
+              .filter((movie) => movie && movie.platforms.length > 0)
+              .slice(0, 3);
+
+            normalized[decadeId] = filtered;
+          })
+        );
 
         setMoviesByDecade(normalized);
+        setPlatformsByMovieId((prev) => ({ ...prev, ...platformUpdates }));
       } catch (error) {
         console.error('Error fetching thematic movies:', error);
       } finally {
@@ -138,21 +200,55 @@ const ThematicJourneys = () => {
       setDetailLoadingDecade(journey.id);
       const movies = await searchMoviesByPeriod(journey.period[0], journey.period[1]);
 
-      const formattedMovies = (Array.isArray(movies) ? movies : [])
-        .slice(0, 12)
-        .map((movie) => ({
-          id: movie.movie_id || movie.id,
-          title: movie.title,
-          posterUrl: movie.poster_path ? `${POSTER_BASE_URL}${movie.poster_path}` : null,
-          director: movie.director || null,
-          cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
-          releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null
-        }));
+      const platformUpdates = {};
+
+      const formattedMovies = await Promise.all(
+        (Array.isArray(movies) ? movies : []).map(async (movie) => {
+          const movieId = movie.movie_id || movie.id;
+
+          if (!movieId) {
+            return null;
+          }
+
+          if (!platformUpdates[movieId]) {
+            try {
+              const platformRes = await getPlatforms(movieId);
+              platformUpdates[movieId] = {
+                platforms: Array.isArray(platformRes?.platforms)
+                  ? platformRes.platforms
+                  : [],
+                link: platformRes?.link ?? ''
+              };
+            } catch (error) {
+              console.error(`Platform bilgisi alınamadı (${movieId}):`, error);
+              platformUpdates[movieId] = {
+                platforms: [],
+                link: ''
+              };
+            }
+          }
+
+          return {
+            id: movieId,
+            title: movie.title,
+            posterUrl: movie.poster_path ? `${POSTER_BASE_URL}${movie.poster_path}` : null,
+            director: movie.director || null,
+            cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
+            releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null,
+            platforms: platformUpdates[movieId].platforms
+          };
+        })
+      );
+
+      const filteredMovies = formattedMovies
+        .filter((movie) => movie && movie.platforms.length > 0)
+        .slice(0, 12);
 
       setDetailMovies((prev) => ({
         ...prev,
-        [journey.id]: formattedMovies
+        [journey.id]: filteredMovies
       }));
+      setPlatformsByMovieId((prev) => ({ ...prev, ...platformUpdates }));
     } catch (error) {
       console.error('Error fetching decade highlights:', error);
       setDetailError('Bu dönemin popüler filmleri alınırken bir sorun oluştu. Lütfen tekrar deneyin.');
@@ -203,23 +299,51 @@ const ThematicJourneys = () => {
               <p className="journey-description">{journey.description}</p>
             </div>
             
-            <div className="journey-movies">
-              {journey.movies.map((movie, index) => (
-                <div key={movie.movie_id || index} className="movie-poster">
-                  {movie.poster_path ? (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w154${movie.poster_path}`}
-                      alt={movie.title}
-                      className="poster-image"
-                    />
-                  ) : (
-                    <div className="poster-placeholder">
-                      <span>🎬</span>
+            {journey.movies.length === 0 ? (
+              <div className="journey-empty">Bu dönemde yayın platformlarında uygun film bulunamadı.</div>
+            ) : (
+              <div className="journey-movies">
+                {journey.movies.map((movie, index) => {
+                  const uniquePlatforms = dedupePlatforms(movie.platforms);
+
+                  return (
+                    <div key={movie.id || movie.movie_id || index} className="movie-poster">
+                      {movie.poster_path ? (
+                        <img
+                          src={`https://image.tmdb.org/t/p/w154${movie.poster_path}`}
+                          alt={movie.title}
+                          className="poster-image"
+                        />
+                      ) : (
+                        <div className="poster-placeholder">
+                          <span>🎬</span>
+                        </div>
+                      )}
+
+                      <div className="movie-platforms">
+                        {uniquePlatforms.map((platform) => (
+                          <div
+                            key={platform?.provider_id || platform?.provider_name}
+                            className="platform-badge"
+                          >
+                            <img
+                              src={
+                                platform?.logo_path === '/yt'
+                                  ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                  : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                              }
+                              alt={platform?.provider_name}
+                              title={platform?.provider_name}
+                            />
+                            <span>{platform?.provider_name}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
             
             <div className="journey-indicators">
               <span className="indicator active"></span>
@@ -260,11 +384,14 @@ const ThematicJourneys = () => {
           ) : detailError ? (
             <div className="journey-detail-error">{detailError}</div>
           ) : (detailMovies[activeJourney.id] || []).length === 0 ? (
-            <div className="journey-detail-empty">Bu dönem için film bulunamadı.</div>
+            <div className="journey-detail-empty">Bu dönemde platformlarda izlenebilecek film bulunamadı.</div>
           ) : (
             <div className="detail-movie-list">
-              {(detailMovies[activeJourney.id] || []).map((movie) => (
-                <article key={movie.id} className="detail-movie-card">
+              {(detailMovies[activeJourney.id] || []).map((movie) => {
+                const uniquePlatforms = dedupePlatforms(movie.platforms);
+
+                return (
+                  <article key={movie.id} className="detail-movie-card">
                   <div className="detail-movie-poster">
                     {movie.posterUrl ? (
                       <img src={movie.posterUrl} alt={movie.title} />
@@ -288,9 +415,29 @@ const ThematicJourneys = () => {
                         Başroller: {movie.cast.join(', ')}
                       </p>
                     )}
+                    <div className="detail-movie-platforms">
+                      {uniquePlatforms.map((platform) => (
+                        <div
+                          key={platform?.provider_id || platform?.provider_name}
+                          className="platform-badge"
+                        >
+                          <img
+                            src={
+                              platform?.logo_path === '/yt'
+                                ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                            }
+                            alt={platform?.provider_name}
+                            title={platform?.provider_name}
+                          />
+                          <span>{platform?.provider_name}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
