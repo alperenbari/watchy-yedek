@@ -11,6 +11,7 @@ function App() {
     platforms,
     scores,
     loading,
+    hasCompletedSearch,
     handleSearch
   } = useSearch();
 
@@ -46,6 +47,7 @@ function App() {
           searchResults={searchResults}
           platforms={platforms}
           scores={scores}
+          hasCompletedSearch={hasCompletedSearch}
         />
       </div>
     </div>
