@@ -31,7 +31,7 @@ function App() {
         onSearch={handleHeroSearch}
       />
 
-      <ThematicJourneys onContentChange={resetResults} />
+      {!hasCompletedSearch && <ThematicJourneys onContentChange={resetResults} />}
 
       {/* Yükleniyor durumu */}
       {loading && (
