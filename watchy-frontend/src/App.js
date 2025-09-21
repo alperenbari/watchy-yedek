@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import ResultList from './components/ResultList';
 import { useSearch } from './hooks/useSearch';
@@ -6,6 +6,8 @@ import HeroBanner from './components/HeroBanner';
 import ThematicJourneys from './components/thematicjourneys';
 
 function App() {
+  const [showThematicJourneys, setShowThematicJourneys] = useState(false);
+  const thematicSectionRef = useRef(null);
   const {
     searchResults,
     platforms,
@@ -20,16 +22,42 @@ function App() {
     handleSearch(searchPayload);
   };
 
+  const scrollToThematicSection = () => {
+    if (thematicSectionRef.current) {
+      thematicSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleFilmsClick = () => {
+    if (showThematicJourneys) {
+      scrollToThematicSection();
+      return;
+    }
+
+    setShowThematicJourneys(true);
+  };
+
+  useEffect(() => {
+    if (showThematicJourneys) {
+      scrollToThematicSection();
+    }
+  }, [showThematicJourneys]);
+
   return (
     <div className="App">
       {/* Sinematik HeroBanner */}
       <HeroBanner
         title="Sadece İZLENEBİLİR ve EN İYİ içerikler!"
         onSearch={handleHeroSearch}
+        onFilmsClick={handleFilmsClick}
       />
 
       <div className="app-main">
-        {!hasCompletedSearch && <ThematicJourneys onContentChange={resetResults} />}
+        {!hasCompletedSearch && showThematicJourneys && (
+          <div id="filmler" ref={thematicSectionRef}>
+            <ThematicJourneys onContentChange={resetResults} />
+          </div>
+        )}
 
         {/* Yükleniyor durumu */}
         {loading && (
