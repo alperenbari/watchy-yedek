@@ -118,12 +118,6 @@ const HeroBanner = ({ title, onSearch }) => {
     }
   }, []);
 
-  const handleLogin = () => {
-    // Login işlemi için handler
-    console.log('Login clicked');
-    // TODO: Login modal veya sayfasına yönlendirme
-  };
-
   const highlightTitle = (text) => {
     const segments = text.split(/(İZLENEBİLİR|İzlenebilir|izlenebilir|EN İYİ|En İyi|en iyi)/g);
 
@@ -152,37 +146,25 @@ const HeroBanner = ({ title, onSearch }) => {
 
   return (
     <section className="hero-banner">
-      {/* Projeksiyon ışığı */}
-      <div className="projector-light"></div>
-      
-      {/* Sinema koltukları silüeti */}
-      <div className="cinema-seats"></div>
-      
-      {/* Film şeritleri */}
-      <div className="film-strip-left"></div>
-      <div className="film-strip-right"></div>
-
-      {/* Ana içerik - glassmorphism container */}
-      <div className="hero-content-container">
-        <div className="hero-top-row">
-          {/* Logo */}
-          <div className="hero-logo-container">
-            <img src={logo} alt="Watchy" className="hero-logo" />
-          </div>
-
-          {/* Başlık ve Arama */}
-          <div className="hero-center-stack">
-            <div className="hero-title">
-              <h1>{highlightTitle(title)}</h1>
+      <div className="hero-strap">
+        <div className="hero-inner">
+          <div className="hero-header">
+            <div className="hero-logo-container">
+              <img src={logo} alt="Watchy" className="hero-logo" />
             </div>
 
-            <p className="hero-note">
-              Watchy'de yalnızca şu anda platformlarda bulunan en iyi içerikler var. Platformlarda kaybolma. Watchy'de
-              içeriğini kolayca seç ve izlemeye başla!
-            </p>
+            <div className="hero-title-group">
+              <h1>{highlightTitle(title)}</h1>
+              <p className="hero-note">
+                Watchy'de yalnızca şu anda platformlarda bulunan en iyi içerikler var. Platformlarda kaybolma. Watchy'de
+                içeriğini kolayca seç ve izlemeye başla!
+              </p>
+            </div>
+          </div>
 
-            <div className="hero-search-container">
-              <div className="hero-search-box">
+          <div className="hero-search-container">
+            <div className="hero-search-box">
+              <div className="hero-search-input-wrapper">
                 <input
                   type="text"
                   className="hero-search-input"
@@ -198,63 +180,47 @@ const HeroBanner = ({ title, onSearch }) => {
                     <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
                   </svg>
                 </button>
-                {isSuggestionOpen && (
-                  <div className="hero-suggestions">
-                    {isLoadingSuggestions && (
-                      <div className="hero-suggestions-empty">Filmler aranıyor...</div>
-                    )}
-
-                    {!isLoadingSuggestions && suggestions.length === 0 && (
-                      <div className="hero-suggestions-empty">Uygun film bulunamadı.</div>
-                    )}
-
-                    {!isLoadingSuggestions && suggestions.map((movie) => {
-                      const posterUrl = movie.poster_path
-                        ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
-                        : null;
-
-                      const releaseYear = movie.release_date
-                        ? new Date(movie.release_date).getFullYear()
-                        : null;
-
-                      return (
-                        <button
-                          key={movie.movie_id}
-                          type="button"
-                          className="hero-suggestion-item"
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => handleSuggestionSelect(movie)}
-                        >
-                          {posterUrl ? (
-                            <img
-                              src={posterUrl}
-                              alt={movie.title}
-                              className="hero-suggestion-image"
-                            />
-                          ) : (
-                            <div className="hero-suggestion-placeholder">
-                              {movie.title?.[0] ?? '?'}
-                            </div>
-                          )}
-                          <div className="hero-suggestion-info">
-                            <span className="hero-suggestion-title">{movie.title}</span>
-                            {releaseYear && (
-                              <span className="hero-suggestion-meta">{releaseYear}</span>
-                            )}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
+
+              {isSuggestionOpen && (
+                <div className="hero-suggestions">
+                  {isLoadingSuggestions && (
+                    <div className="hero-suggestions-empty">Filmler aranıyor...</div>
+                  )}
+
+                  {!isLoadingSuggestions && suggestions.length === 0 && (
+                    <div className="hero-suggestions-empty">Uygun film bulunamadı.</div>
+                  )}
+
+                  {!isLoadingSuggestions && suggestions.map((movie) => {
+                    const posterUrl = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : null;
+
+                    const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+
+                    return (
+                      <button
+                        key={movie.movie_id}
+                        type="button"
+                        className="hero-suggestion-item"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => handleSuggestionSelect(movie)}
+                      >
+                        {posterUrl ? (
+                          <img src={posterUrl} alt={movie.title} className="hero-suggestion-image" />
+                        ) : (
+                          <div className="hero-suggestion-placeholder">{movie.title?.[0] ?? '?'}</div>
+                        )}
+                        <div className="hero-suggestion-info">
+                          <span className="hero-suggestion-title">{movie.title}</span>
+                          {releaseYear && <span className="hero-suggestion-meta">{releaseYear}</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Login butonu */}
-          <button className="hero-login-button" onClick={handleLogin}>
-            Giriş Yap
-          </button>
         </div>
       </div>
     </section>
