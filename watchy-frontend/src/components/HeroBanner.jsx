@@ -147,19 +147,32 @@ const HeroBanner = ({ title, onSearch }) => {
   return (
     <section className="hero-banner">
       <div className="hero-strap">
-        <div className="hero-inner">
-          <div className="hero-header">
+        <div className="hero-top-bar">
+          <div className="hero-top-left">
             <div className="hero-logo-container">
               <img src={logo} alt="Watchy" className="hero-logo" />
             </div>
 
-            <div className="hero-title-group">
-              <h1>{highlightTitle(title)}</h1>
-              <p className="hero-note">
-                Watchy'de yalnızca şu anda platformlarda bulunan en iyi içerikler var. Platformlarda kaybolma. Watchy'de
-                içeriğini kolayca seç ve izlemeye başla!
-              </p>
-            </div>
+            <nav className="hero-navigation" aria-label="Ana menü">
+              <a href="#filmler" className="hero-nav-link">Filmler</a>
+              <a href="#diziler" className="hero-nav-link">Diziler</a>
+              <a href="#kisiler" className="hero-nav-link">Kişiler</a>
+              <a href="#daha-fazla" className="hero-nav-link">Daha Fazla</a>
+            </nav>
+          </div>
+
+          <div className="hero-top-right">
+            <button type="button" className="hero-login-button">Giriş Yap</button>
+          </div>
+        </div>
+
+        <div className="hero-inner">
+          <div className="hero-title-group">
+            <h1>{highlightTitle(title)}</h1>
+            <p className="hero-note">
+              Watchy'de yalnızca şu anda platformlarda bulunan en iyi içerikler var. Platformlarda kaybolma. Watchy'de
+              içeriğini kolayca seç ve izlemeye başla!
+            </p>
           </div>
 
           <div className="hero-search-container">
