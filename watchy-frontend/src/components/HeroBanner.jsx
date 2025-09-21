@@ -5,12 +5,19 @@ import { searchMovies } from '../services/api';
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w92';
 
-const HeroBanner = ({ title, onSearch }) => {
+const HeroBanner = ({ title, onSearch, onFilmsClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
   const blurTimeoutRef = useRef(null);
+
+  const handleFilmsNavClick = (event) => {
+    if (typeof onFilmsClick === 'function') {
+      event.preventDefault();
+      onFilmsClick();
+    }
+  };
 
   const handleSearch = () => {
     const trimmedQuery = searchQuery.trim();
@@ -154,7 +161,13 @@ const HeroBanner = ({ title, onSearch }) => {
             </div>
 
             <nav className="hero-navigation" aria-label="Ana menü">
-              <a href="#filmler" className="hero-nav-link">Filmler</a>
+              <a
+                href="#filmler"
+                className="hero-nav-link"
+                onClick={handleFilmsNavClick}
+              >
+                Filmler
+              </a>
               <a href="#diziler" className="hero-nav-link">Diziler</a>
               <a href="#kisiler" className="hero-nav-link">Kişiler</a>
               <a href="#daha-fazla" className="hero-nav-link">Daha Fazla</a>
