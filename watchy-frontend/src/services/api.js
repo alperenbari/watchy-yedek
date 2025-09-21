@@ -67,3 +67,14 @@ export const getTopMoviesByDecade = (start, end, limit = 3) => {
     'On yıllık döneme göre film araması başarısız'
   );
 };
+
+export const searchMoviesByDirector = (directorId) => {
+  if (directorId == null || directorId === '') {
+    return Promise.resolve([]);
+  }
+
+  return fetchJson(
+    `/search/director/${encodeURIComponent(directorId)}`,
+    'Yönetmene göre film arama başarısız'
+  );
+};
