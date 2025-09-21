@@ -64,6 +64,279 @@ const DECADE_CONFIGS = [
   }
 ];
 
+const DIRECTOR_CARDS = [
+  {
+    id: 'christopher-nolan',
+    title: 'Christopher Nolan',
+    subtitle: 'Zamanı büken anlatılar',
+    description: 'Epik ölçekli bilim kurgu ve gerilim filmleriyle modern blockbuster tanımını yeniledi.',
+    color: '#1d4ed8',
+    movies: [
+      {
+        id: 'inception',
+        title: 'Inception',
+        poster_path: '/ljsZTbVsrQSqZgWeep2B1QiDKuh.jpg',
+        platforms: []
+      },
+      {
+        id: 'the-dark-knight',
+        title: 'The Dark Knight',
+        poster_path: '/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
+        platforms: []
+      },
+      {
+        id: 'interstellar',
+        title: 'Interstellar',
+        poster_path: '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'steven-spielberg',
+    title: 'Steven Spielberg',
+    subtitle: 'Hollywood’un hikâye ustası',
+    description: 'Serüven, bilim kurgu ve dramı eşsiz bir duygusallıkla buluşturdu.',
+    color: '#f97316',
+    movies: [
+      {
+        id: 'jurassic-park',
+        title: 'Jurassic Park',
+        poster_path: '/bRKmwU9eXZI5dKT11Zx1KsayiLW.jpg',
+        platforms: []
+      },
+      {
+        id: 'schindlers-list',
+        title: "Schindler's List",
+        poster_path: '/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg',
+        platforms: []
+      },
+      {
+        id: 'et',
+        title: 'E.T. the Extra-Terrestrial',
+        poster_path: '/an0nD6uq6byfxXCfk6lQBzdL2J1.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'martin-scorsese',
+    title: 'Martin Scorsese',
+    subtitle: 'Suç sinemasının efendisi',
+    description: 'Karakter odaklı suç hikâyeleri ve enerjik anlatımıyla sinema tarihine damga vurdu.',
+    color: '#dc2626',
+    movies: [
+      {
+        id: 'goodfellas',
+        title: 'Goodfellas',
+        poster_path: '/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg',
+        platforms: []
+      },
+      {
+        id: 'the-wolf-of-wall-street',
+        title: 'The Wolf of Wall Street',
+        poster_path: '/kW9LmvYHAaS9iA0tHmZVq8hQYoq.jpg',
+        platforms: []
+      },
+      {
+        id: 'taxi-driver',
+        title: 'Taxi Driver',
+        poster_path: '/ekstpH614fwDX8DUln1a2Opz0N8.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'quentin-tarantino',
+    title: 'Quentin Tarantino',
+    subtitle: 'Pop kültür kurgucusu',
+    description: 'Keskin diyalogları ve çizgisel olmayan kurgusuyla tür sinemasını baştan yorumladı.',
+    color: '#7c3aed',
+    movies: [
+      {
+        id: 'pulp-fiction',
+        title: 'Pulp Fiction',
+        poster_path: '/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg',
+        platforms: []
+      },
+      {
+        id: 'kill-bill-vol-1',
+        title: 'Kill Bill: Vol. 1',
+        poster_path: '/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg',
+        platforms: []
+      },
+      {
+        id: 'inglourious-basterds',
+        title: 'Inglourious Basterds',
+        poster_path: '/7sfbEnaARXDDhKm0CZ7D7uc2sbo.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'alfred-hitchcock',
+    title: 'Alfred Hitchcock',
+    subtitle: 'Gerilimde ustalık dersi',
+    description: 'Psikolojik gerilimdeki yenilikleriyle “gerilim ustası” unvanını hak etti.',
+    color: '#0ea5e9',
+    movies: [
+      {
+        id: 'psycho',
+        title: 'Psycho',
+        poster_path: '/yz4QVqPx3h1hD1DfqqQkCq3rmxW.jpg',
+        platforms: []
+      },
+      {
+        id: 'vertigo',
+        title: 'Vertigo',
+        poster_path: '/5YAGO4huuHGB8f4X1G0wfy67QeB.jpg',
+        platforms: []
+      },
+      {
+        id: 'rear-window',
+        title: 'Rear Window',
+        poster_path: '/ILVF0eJxHMddjxeQhswFtpMtqx.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'stanley-kubrick',
+    title: 'Stanley Kubrick',
+    subtitle: 'Kusursuz kadrajların mimarı',
+    description: 'Teknik mükemmeliyetçiliğiyle her türde unutulmaz klasikleri ardında bıraktı.',
+    color: '#db2777',
+    movies: [
+      {
+        id: '2001-a-space-odyssey',
+        title: '2001: A Space Odyssey',
+        poster_path: '/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg',
+        platforms: []
+      },
+      {
+        id: 'a-clockwork-orange',
+        title: 'A Clockwork Orange',
+        poster_path: '/4sHeTAp65WrSSuc05nRBKddhBxO.jpg',
+        platforms: []
+      },
+      {
+        id: 'the-shining',
+        title: 'The Shining',
+        poster_path: '/xazWoLealQwEgqZ89MLZklLZD3k.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'ridley-scott',
+    title: 'Ridley Scott',
+    subtitle: 'Bilim kurgu vizyoneri',
+    description: 'Görsel dünyasıyla epik macera ve bilim kurgu hikâyelerini öne çıkardı.',
+    color: '#16a34a',
+    movies: [
+      {
+        id: 'gladiator',
+        title: 'Gladiator',
+        poster_path: '/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg',
+        platforms: []
+      },
+      {
+        id: 'alien',
+        title: 'Alien',
+        poster_path: '/vfrQk5IPloGg1v9Rzbh2Eg3VGyM.jpg',
+        platforms: []
+      },
+      {
+        id: 'blade-runner',
+        title: 'Blade Runner',
+        poster_path: '/63N9uy8nd9j7Eog2axPQ8lbr3Wj.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'james-cameron',
+    title: 'James Cameron',
+    subtitle: 'Sınırları zorlayan vizyon',
+    description: 'Teknolojik yenilikleri destansı aşk ve macera anlatılarıyla buluşturdu.',
+    color: '#2563eb',
+    movies: [
+      {
+        id: 'titanic',
+        title: 'Titanic',
+        poster_path: '/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg',
+        platforms: []
+      },
+      {
+        id: 'avatar',
+        title: 'Avatar',
+        poster_path: '/gKY6q7SjCkAU6FqvqWybDYgUKIF.jpg',
+        platforms: []
+      },
+      {
+        id: 'terminator-2',
+        title: 'Terminator 2: Judgment Day',
+        poster_path: '/weVXMD5QBGeQil4HEATZqAkXeEc.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'hayao-miyazaki',
+    title: 'Hayao Miyazaki',
+    subtitle: 'Hayal gücünün efendisi',
+    description: 'Anime sinemasını evrensel öyküler ve büyülü dünyalarla dünyaya tanıttı.',
+    color: '#f59e0b',
+    movies: [
+      {
+        id: 'spirited-away',
+        title: 'Spirited Away',
+        poster_path: '/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
+        platforms: []
+      },
+      {
+        id: 'my-neighbor-totoro',
+        title: 'My Neighbor Totoro',
+        poster_path: '/rtGDOeG9LzoerkDGZF9dnVeLppL.jpg',
+        platforms: []
+      },
+      {
+        id: 'princess-mononoke',
+        title: 'Princess Mononoke',
+        poster_path: '/cMYCDADoLKLbB83g4WnJegaZimC.jpg',
+        platforms: []
+      }
+    ]
+  },
+  {
+    id: 'peter-jackson',
+    title: 'Peter Jackson',
+    subtitle: 'Orta Dünya’nın mimarı',
+    description: 'Yüzüklerin Efendisi uyarlamasıyla fantastik sinemada çığır açtı.',
+    color: '#22d3ee',
+    movies: [
+      {
+        id: 'lotr-fellowship',
+        title: 'The Fellowship of the Ring',
+        poster_path: '/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg',
+        platforms: []
+      },
+      {
+        id: 'lotr-two-towers',
+        title: 'The Two Towers',
+        poster_path: '/5VTN0pR8gcqV3EPUHHfMGnJYN9L.jpg',
+        platforms: []
+      },
+      {
+        id: 'lotr-return-of-the-king',
+        title: 'The Return of the King',
+        poster_path: '/lTwUT4NsSyUQlHV20Mx3C96JHq4.jpg',
+        platforms: []
+      }
+    ]
+  }
+];
+
 const ThematicJourneys = ({ onContentChange }) => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
@@ -490,6 +763,43 @@ const ThematicJourneys = ({ onContentChange }) => {
           )}
         </div>
       )}
+
+      <h2 className="section-title">Yönetmenler</h2>
+      <div className="journeys-container directors-container">
+        {DIRECTOR_CARDS.map((director) => (
+          <div
+            key={director.id}
+            className="journey-card director-card"
+            style={{ backgroundColor: director.color }}
+          >
+            <div className="journey-header">
+              <h3 className="journey-title">{director.title}</h3>
+              {director.subtitle && <h4 className="journey-subtitle">{director.subtitle}</h4>}
+              {director.description && (
+                <p className="journey-description">{director.description}</p>
+              )}
+            </div>
+
+            <div className="journey-movies">
+              {director.movies.map((movie) => (
+                <div key={movie.id} className="movie-poster">
+                  {movie.poster_path ? (
+                    <img
+                      src={`${POSTER_BASE_URL}${movie.poster_path}`}
+                      alt={`${movie.title} film afişi`}
+                      className="poster-image"
+                    />
+                  ) : (
+                    <div className="poster-placeholder" aria-hidden="true">
+                      🎬
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
