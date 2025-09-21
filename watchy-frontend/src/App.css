@@ -6,15 +6,15 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #010a16;
-  color: #111827;
+  background: linear-gradient(180deg, #043452 0%, #010c1f 100%);
+  color: #0f172a;
   line-height: 1.6;
 }
 
 .App {
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #111827;
+  background: transparent;
+  color: #0f172a;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;

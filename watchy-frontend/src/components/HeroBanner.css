@@ -1,17 +1,18 @@
 /* HeroBanner.css - TMDB benzeri şerit tasarım */
 
 :root {
-  --hero-primary: #032541;
-  --hero-secondary: #01b4e4;
-  --hero-accent: #1ed5a9;
-  --hero-text: #f5f6f8;
+  --hero-primary: #013c63;
+  --hero-secondary: #00b4d8;
+  --hero-accent: #2dd4bf;
+  --hero-text: #f8fbff;
 }
 
 .hero-banner {
   position: relative;
   margin: -20px -20px 48px;
   padding: clamp(48px, 12vw, 96px) 0;
-  background: linear-gradient(180deg, #010a16 0%, #00060d 100%);
+  background: radial-gradient(circle at 10% 10%, rgba(0, 180, 216, 0.45) 0%, transparent 55%),
+    linear-gradient(140deg, #013c63 0%, #041c3d 55%, #031026 100%);
   display: flex;
   justify-content: center;
 }
@@ -22,8 +23,8 @@
   border-radius: 0 0 clamp(28px, 5vw, 48px) 0;
   padding: clamp(24px, 6vw, 56px) clamp(24px, 6vw, 56px) clamp(48px, 7vw, 64px);
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(3, 37, 65, 0.95) 0%, rgba(7, 48, 73, 0.92) 45%, rgba(3, 21, 45, 0.9) 100%);
-  box-shadow: 0 30px 80px rgba(2, 14, 24, 0.6);
+  background: linear-gradient(135deg, rgba(5, 76, 109, 0.92) 0%, rgba(2, 51, 90, 0.95) 45%, rgba(1, 29, 58, 0.92) 100%);
+  box-shadow: 0 30px 80px rgba(2, 26, 43, 0.55);
 }
 
 .hero-strap::before {
@@ -31,10 +32,10 @@
   position: absolute;
   inset: -30% -35% -20% -35%;
   background:
-    radial-gradient(circle at 15% 20%, rgba(1, 180, 228, 0.65) 0%, transparent 55%),
-    radial-gradient(circle at 85% 80%, rgba(30, 213, 169, 0.45) 0%, transparent 55%),
-    radial-gradient(circle at 70% 0%, rgba(3, 74, 121, 0.45) 0%, transparent 65%);
-  opacity: 0.9;
+    radial-gradient(circle at 18% 25%, rgba(0, 180, 216, 0.7) 0%, transparent 55%),
+    radial-gradient(circle at 82% 72%, rgba(45, 212, 191, 0.5) 0%, transparent 60%),
+    radial-gradient(circle at 70% -10%, rgba(10, 148, 211, 0.45) 0%, transparent 70%);
+  opacity: 1;
   mix-blend-mode: screen;
   pointer-events: none;
 }
@@ -43,8 +44,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.45) 100%);
-  opacity: 0.9;
+  background: linear-gradient(180deg, rgba(4, 60, 96, 0.35) 0%, rgba(0, 19, 41, 0.7) 100%);
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -70,12 +71,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 18px;
+  padding: 10px 16px;
   border-radius: clamp(18px, 3vw, 28px);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 45px rgba(0, 17, 35, 0.35);
 }
 
 .hero-logo {
@@ -91,7 +92,7 @@
 
 .hero-nav-link {
   font-size: clamp(14px, 2.4vw, 16px);
-  color: rgba(245, 246, 248, 0.85);
+  color: rgba(248, 251, 255, 0.92);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
@@ -111,19 +112,18 @@
 .hero-login-button {
   padding: 10px 24px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.16);
-  color: var(--hero-text);
-  font-weight: 600;
+  border: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.65) 100%);
+  color: #012a4a;
+  font-weight: 700;
   font-size: clamp(13px, 2.4vw, 15px);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .hero-login-button:hover {
-  background: rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 18px 30px rgba(4, 65, 102, 0.35);
 }
 
 .hero-inner {
@@ -150,7 +150,7 @@
 
 .hero-banner h1 {
   margin: 0;
-  font-size: clamp(26px, 5vw, 44px);
+  font-size: clamp(28px, 5.4vw, 46px);
   line-height: 1.2;
   font-weight: 700;
   color: var(--hero-text);
@@ -175,7 +175,7 @@
   max-width: 640px;
   font-size: clamp(15px, 2.4vw, 18px);
   line-height: 1.55;
-  color: rgba(245, 246, 248, 0.78);
+  color: rgba(241, 246, 255, 0.9);
 }
 
 .hero-search-container {
@@ -196,23 +196,23 @@
   gap: 0;
   border-radius: clamp(18px, 4vw, 32px);
   overflow: hidden;
-  background: rgba(2, 20, 38, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 18px 40px rgba(3, 16, 28, 0.55);
-  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 197, 255, 0.5);
+  box-shadow: 0 18px 40px rgba(4, 41, 82, 0.35);
+  backdrop-filter: blur(10px);
 }
 
 .hero-search-input {
   flex: 1;
   padding: clamp(16px, 4vw, 20px) clamp(18px, 5vw, 28px);
   font-size: clamp(15px, 2.8vw, 18px);
-  color: var(--hero-text);
+  color: #012a4a;
   background: transparent;
   border: none;
 }
 
 .hero-search-input::placeholder {
-  color: rgba(245, 246, 248, 0.55);
+  color: rgba(15, 23, 42, 0.45);
 }
 
 .hero-search-input:focus {
@@ -221,7 +221,7 @@
 
 .hero-search-button {
   width: clamp(58px, 14vw, 78px);
-  background: linear-gradient(135deg, #01b4e4 0%, #0193c2 100%);
+  background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
   border: none;
   color: #ffffff;
   display: flex;
@@ -233,8 +233,8 @@
 
 .hero-search-button:hover {
   transform: translateY(-1px);
-  background: linear-gradient(135deg, #01c6fb 0%, #01a3d1 100%);
-  box-shadow: 0 12px 24px rgba(1, 180, 228, 0.35);
+  background: linear-gradient(135deg, #00d0ff 0%, #0096c7 100%);
+  box-shadow: 0 12px 24px rgba(0, 180, 216, 0.45);
 }
 
 .hero-search-button:active {
