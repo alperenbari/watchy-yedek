@@ -6,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  background-color: #ffffff;
+  background-color: #010a16;
   color: #111827;
   line-height: 1.6;
 }
@@ -14,6 +14,28 @@ body {
 .App {
   min-height: 100vh;
   background-color: #ffffff;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.app-main {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 0 20px 40px;
+}
+
+.app-loading {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+.app-results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* Header Styles */
