@@ -21,36 +21,31 @@ function App() {
   };
 
   return (
-    <div
-      className="App"
-      style={{ backgroundColor: '#ffffff', color: '#111827', minHeight: '100vh', padding: '20px' }}
-    >
+    <div className="App">
       {/* Sinematik HeroBanner */}
       <HeroBanner
         title="Sadece İZLENEBİLİR ve EN İYİ içerikler!"
         onSearch={handleHeroSearch}
       />
 
-      {!hasCompletedSearch && <ThematicJourneys onContentChange={resetResults} />}
+      <div className="app-main">
+        {!hasCompletedSearch && <ThematicJourneys onContentChange={resetResults} />}
 
-      {/* Yükleniyor durumu */}
-      {loading && (
-        <div style={{ 
-          textAlign: 'center', 
-          padding: '40px',
-          color: '#888'
-        }}>
-          <p>Yükleniyor...</p>
+        {/* Yükleniyor durumu */}
+        {loading && (
+          <div className="app-loading">
+            <p>Yükleniyor...</p>
+          </div>
+        )}
+
+        {/* Sonuçlar */}
+        <div className="app-results-container">
+          <ResultList
+            searchResults={searchResults}
+            platforms={platforms}
+            hasCompletedSearch={hasCompletedSearch}
+          />
         </div>
-      )}
-
-      {/* Sonuçlar */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-        <ResultList
-          searchResults={searchResults}
-          platforms={platforms}
-          hasCompletedSearch={hasCompletedSearch}
-        />
       </div>
     </div>
   );
