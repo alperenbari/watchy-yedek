@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './thematicjourneys.css';
-import { getPlatforms, searchMoviesByPeriod } from '../services/api';
+import { getPlatforms, searchMoviesByPeriod, searchMoviesByDirector } from '../services/api';
 
 const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w185';
 
@@ -67,6 +67,7 @@ const DECADE_CONFIGS = [
 const DIRECTOR_CARDS = [
   {
     id: 'christopher-nolan',
+    tmdbId: 525,
     title: 'Christopher Nolan',
     subtitle: 'Zamanı büken anlatılar',
     description: 'Epik ölçekli bilim kurgu ve gerilim filmleriyle modern blockbuster tanımını yeniledi.',
@@ -94,6 +95,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'steven-spielberg',
+    tmdbId: 488,
     title: 'Steven Spielberg',
     subtitle: 'Hollywood’un hikâye ustası',
     description: 'Serüven, bilim kurgu ve dramı eşsiz bir duygusallıkla buluşturdu.',
@@ -121,6 +123,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'martin-scorsese',
+    tmdbId: 1032,
     title: 'Martin Scorsese',
     subtitle: 'Suç sinemasının efendisi',
     description: 'Karakter odaklı suç hikâyeleri ve enerjik anlatımıyla sinema tarihine damga vurdu.',
@@ -148,6 +151,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'quentin-tarantino',
+    tmdbId: 138,
     title: 'Quentin Tarantino',
     subtitle: 'Pop kültür kurgucusu',
     description: 'Keskin diyalogları ve çizgisel olmayan kurgusuyla tür sinemasını baştan yorumladı.',
@@ -175,6 +179,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'alfred-hitchcock',
+    tmdbId: 2636,
     title: 'Alfred Hitchcock',
     subtitle: 'Gerilimde ustalık dersi',
     description: 'Psikolojik gerilimdeki yenilikleriyle “gerilim ustası” unvanını hak etti.',
@@ -202,6 +207,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'stanley-kubrick',
+    tmdbId: 240,
     title: 'Stanley Kubrick',
     subtitle: 'Kusursuz kadrajların mimarı',
     description: 'Teknik mükemmeliyetçiliğiyle her türde unutulmaz klasikleri ardında bıraktı.',
@@ -229,6 +235,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'ridley-scott',
+    tmdbId: 578,
     title: 'Ridley Scott',
     subtitle: 'Bilim kurgu vizyoneri',
     description: 'Görsel dünyasıyla epik macera ve bilim kurgu hikâyelerini öne çıkardı.',
@@ -256,6 +263,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'james-cameron',
+    tmdbId: 2710,
     title: 'James Cameron',
     subtitle: 'Sınırları zorlayan vizyon',
     description: 'Teknolojik yenilikleri destansı aşk ve macera anlatılarıyla buluşturdu.',
@@ -283,6 +291,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'hayao-miyazaki',
+    tmdbId: 608,
     title: 'Hayao Miyazaki',
     subtitle: 'Hayal gücünün efendisi',
     description: 'Anime sinemasını evrensel öyküler ve büyülü dünyalarla dünyaya tanıttı.',
@@ -310,6 +319,7 @@ const DIRECTOR_CARDS = [
   },
   {
     id: 'peter-jackson',
+    tmdbId: 108,
     title: 'Peter Jackson',
     subtitle: 'Orta Dünya’nın mimarı',
     description: 'Yüzüklerin Efendisi uyarlamasıyla fantastik sinemada çığır açtı.',
@@ -345,6 +355,10 @@ const ThematicJourneys = ({ onContentChange }) => {
   const [detailLoadingDecade, setDetailLoadingDecade] = useState(null);
   const [detailError, setDetailError] = useState(null);
   const [platformsByMovieId, setPlatformsByMovieId] = useState({});
+  const [expandedDirector, setExpandedDirector] = useState(null);
+  const [directorDetailMovies, setDirectorDetailMovies] = useState({});
+  const [directorDetailLoadingId, setDirectorDetailLoadingId] = useState(null);
+  const [directorDetailError, setDirectorDetailError] = useState(null);
 
   const dedupePlatforms = (platforms) =>
     Array.isArray(platforms)
@@ -448,6 +462,9 @@ const ThematicJourneys = ({ onContentChange }) => {
   const handleJourneySelect = async (journey) => {
     if (!journey) return;
 
+    setExpandedDirector(null);
+    setDirectorDetailError(null);
+
     if (expandedDecade === journey.id) {
       setExpandedDecade(null);
       setDetailError(null);
@@ -527,6 +544,102 @@ const ThematicJourneys = ({ onContentChange }) => {
     }
   };
 
+  const handleDirectorSelect = async (director) => {
+    if (!director) return;
+
+    setExpandedDecade(null);
+    setDetailError(null);
+
+    if (expandedDirector === director.id) {
+      setExpandedDirector(null);
+      setDirectorDetailError(null);
+      return;
+    }
+
+    if (typeof onContentChange === 'function') {
+      onContentChange();
+    }
+
+    setExpandedDirector(director.id);
+    setDirectorDetailError(null);
+
+    if (directorDetailMovies[director.id]) {
+      return;
+    }
+
+    if (!director.tmdbId) {
+      setDirectorDetailError('Bu yönetmen için film bilgisi bulunamadı.');
+      return;
+    }
+
+    try {
+      setDirectorDetailLoadingId(director.id);
+      const movies = await searchMoviesByDirector(director.tmdbId);
+
+      const platformUpdates = {};
+
+      const formattedMovies = await Promise.all(
+        (Array.isArray(movies) ? movies : []).map(async (movie) => {
+          const movieId = movie.movie_id || movie.id;
+
+          if (!movieId) {
+            return null;
+          }
+
+          if (!platformUpdates[movieId]) {
+            if (platformsByMovieId[movieId]) {
+              platformUpdates[movieId] = platformsByMovieId[movieId];
+            } else {
+              try {
+                const platformRes = await getPlatforms(movieId);
+                platformUpdates[movieId] = {
+                  platforms: Array.isArray(platformRes?.platforms)
+                    ? platformRes.platforms
+                    : [],
+                  link: platformRes?.link ?? ''
+                };
+              } catch (error) {
+                console.error(`Platform bilgisi alınamadı (${movieId}):`, error);
+                platformUpdates[movieId] = {
+                  platforms: [],
+                  link: ''
+                };
+              }
+            }
+          }
+
+          const platformInfo = platformUpdates[movieId] || { platforms: [], link: '' };
+
+          return {
+            id: movieId,
+            title: movie.title,
+            posterUrl: movie.poster_path ? `${POSTER_BASE_URL}${movie.poster_path}` : null,
+            director: movie.director || director.title,
+            cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
+            releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null,
+            platforms: platformInfo.platforms,
+            link: platformInfo.link
+          };
+        })
+      );
+
+      const filteredMovies = formattedMovies
+        .filter((movie) => movie && movie.platforms.length > 0)
+        .slice(0, 12);
+
+      setDirectorDetailMovies((prev) => ({
+        ...prev,
+        [director.id]: filteredMovies
+      }));
+      setPlatformsByMovieId((prev) => ({ ...prev, ...platformUpdates }));
+    } catch (error) {
+      console.error('Error fetching director highlights:', error);
+      setDirectorDetailError('Bu yönetmenin filmleri alınırken bir sorun oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setDirectorDetailLoadingId(null);
+    }
+  };
+
   const handleKeyPress = (event, journey) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -534,9 +647,21 @@ const ThematicJourneys = ({ onContentChange }) => {
     }
   };
 
+  const handleDirectorKeyPress = (event, director) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleDirectorSelect(director);
+    }
+  };
+
   const activeJourney = useMemo(
     () => journeys.find((journey) => journey.id === expandedDecade) || null,
     [expandedDecade, journeys]
+  );
+
+  const activeDirector = useMemo(
+    () => DIRECTOR_CARDS.find((director) => director.id === expandedDirector) || null,
+    [expandedDirector]
   );
 
   if (loading) {
@@ -769,8 +894,13 @@ const ThematicJourneys = ({ onContentChange }) => {
         {DIRECTOR_CARDS.map((director) => (
           <div
             key={director.id}
-            className="journey-card director-card"
+            className={`journey-card director-card${expandedDirector === director.id ? ' journey-card--active' : ''}`}
             style={{ backgroundColor: director.color }}
+            onClick={() => handleDirectorSelect(director)}
+            onKeyDown={(event) => handleDirectorKeyPress(event, director)}
+            role="button"
+            tabIndex={0}
+            aria-expanded={expandedDirector === director.id}
           >
             <div className="journey-header">
               <h3 className="journey-title">{director.title}</h3>
@@ -800,6 +930,121 @@ const ThematicJourneys = ({ onContentChange }) => {
           </div>
         ))}
       </div>
+      {activeDirector && (
+        <div className="journey-detail-panel">
+          <div className="journey-detail-header">
+            <div className="journey-detail-headline">
+              <span className="journey-detail-years">Yönetmen</span>
+              <h3 className="journey-detail-title">{activeDirector.title}</h3>
+              {activeDirector.subtitle && (
+                <p className="journey-detail-subtitle">{activeDirector.subtitle}</p>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="journey-detail-close"
+              onClick={() => {
+                setExpandedDirector(null);
+                setDirectorDetailError(null);
+              }}
+            >
+              Kapat
+            </button>
+          </div>
+
+          {activeDirector.description && (
+            <p className="journey-detail-description">{activeDirector.description}</p>
+          )}
+
+          {directorDetailLoadingId === activeDirector.id ? (
+            <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
+          ) : directorDetailError ? (
+            <div className="journey-detail-error">{directorDetailError}</div>
+          ) : (directorDetailMovies[activeDirector.id] || []).length === 0 ? (
+            <div className="journey-detail-empty">Bu yönetmenin platformlarda izlenebilecek filmi bulunamadı.</div>
+          ) : (
+            <div className="detail-movie-list">
+              {(directorDetailMovies[activeDirector.id] || []).map((movie) => {
+                const uniquePlatforms = dedupePlatforms(movie.platforms);
+                const movieLink = movie.link || (movie.id ? platformsByMovieId[movie.id]?.link : '');
+
+                return (
+                  <article key={movie.id} className="detail-movie-card">
+                    <div className="detail-movie-poster">
+                      {movie.posterUrl ? (
+                        <img src={movie.posterUrl} alt={movie.title} />
+                      ) : (
+                        <div className="detail-movie-placeholder" aria-hidden="true">
+                          🎞️
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="detail-movie-meta">
+                      <h4 className="detail-movie-title">
+                        {movie.title}
+                        {movie.releaseYear ? (
+                          <span className="detail-movie-year"> ({movie.releaseYear})</span>
+                        ) : null}
+                      </h4>
+                      <p className="detail-movie-director">
+                        {movie.director ? `Yönetmen: ${movie.director}` : 'Yönetmen bilgisi bulunamadı'}
+                      </p>
+                      {movie.cast.length > 0 && (
+                        <p className="detail-movie-cast">
+                          Başroller: {movie.cast.join(', ')}
+                        </p>
+                      )}
+                      <div className="detail-movie-platforms">
+                        {uniquePlatforms.map((platform) => {
+                          const linkForPlatform =
+                            platform?.direct_link ||
+                            platform?.external_link ||
+                            movieLink;
+                          const badgeContent = (
+                            <>
+                              <img
+                                src={
+                                  platform?.logo_path === '/yt'
+                                    ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                    : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                                }
+                                alt={platform?.provider_name}
+                                title={platform?.provider_name}
+                              />
+                              <span>{platform?.provider_name}</span>
+                            </>
+                          );
+
+                          return linkForPlatform ? (
+                            <a
+                              key={platform?.provider_id || platform?.provider_name}
+                              className="platform-badge"
+                              href={linkForPlatform}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {badgeContent}
+                            </a>
+                          ) : (
+                            <div
+                              key={platform?.provider_id || platform?.provider_name}
+                              className="platform-badge"
+                            >
+                              {badgeContent}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 };

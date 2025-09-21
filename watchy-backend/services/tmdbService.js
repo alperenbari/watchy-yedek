@@ -111,6 +111,81 @@ async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(raw
   return resultsWithCredits;
 }
 
+async function getMoviesByDirector(personId, { limit = 40 } = {}) {
+  ensureCredentials();
+
+  const numericId = Number.parseInt(personId, 10);
+  if (!Number.isFinite(numericId)) {
+    throw new Error('Geçersiz yönetmen kimliği.');
+  }
+
+  const cappedLimit = Math.min(Math.max(limit, 1), 40);
+
+  try {
+    const [creditsResponse, personResponse] = await Promise.all([
+      axios.get(
+        `https://api.themoviedb.org/3/person/${numericId}/movie_credits`,
+        withTmdbAuth({ params: { language: 'en-US' } })
+      ),
+      axios.get(
+        `https://api.themoviedb.org/3/person/${numericId}`,
+        withTmdbAuth({ params: { language: 'en-US' } })
+      )
+    ]);
+
+    const allCrew = creditsResponse.data?.crew || [];
+    const directorName = personResponse.data?.name || null;
+
+    const directedCredits = allCrew.filter(
+      (credit) => credit?.job === 'Director' && credit?.id
+    );
+
+    const uniqueCredits = [];
+    const seen = new Set();
+    for (const credit of directedCredits) {
+      if (seen.has(credit.id)) {
+        continue;
+      }
+      seen.add(credit.id);
+      uniqueCredits.push(credit);
+    }
+
+    uniqueCredits.sort((a, b) => {
+      const popularityDiff = (b?.popularity ?? 0) - (a?.popularity ?? 0);
+      if (popularityDiff !== 0) {
+        return popularityDiff;
+      }
+
+      const dateA = a?.release_date ? Date.parse(a.release_date) : 0;
+      const dateB = b?.release_date ? Date.parse(b.release_date) : 0;
+      return dateB - dateA;
+    });
+
+    const limitedCredits = uniqueCredits.slice(0, cappedLimit);
+
+    const movies = await Promise.all(
+      limitedCredits.map(async (credit) => {
+        const { director, cast } = await getCredits(credit.id);
+
+        return {
+          movie_id: credit.id,
+          title: credit.title,
+          poster_path: credit.poster_path,
+          overview: credit.overview,
+          release_date: credit.release_date,
+          director: director || directorName,
+          cast
+        };
+      })
+    );
+
+    return movies;
+  } catch (error) {
+    console.error('🎬 Yönetmen filmografisi alınamadı:', error?.message || error);
+    throw error;
+  }
+}
+
 const REGION_TURKEY = 'TR';
 const CATEGORY_PRIORITY = ['flatrate', 'free', 'ads', 'rent', 'buy'];
 
@@ -435,5 +510,6 @@ async function getWatchProviders(movieId) {
 module.exports = {
   searchMoviesWithCredits,
   getCredits,
-  getWatchProviders
+  getWatchProviders,
+  getMoviesByDirector
 };
