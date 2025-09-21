@@ -1,51 +1,40 @@
 /* HeroBanner.css - TMDB benzeri şerit tasarım */
 
 :root {
-  --hero-primary: #032541;
-  --hero-secondary: #01b4e4;
-  --hero-accent: #1ed5a9;
-  --hero-text: #f5f6f8;
+  --hero-primary: #ffffff;
+  --hero-secondary: #0ea5e9;
+  --hero-accent: #2563eb;
+  --hero-text: #0f172a;
+  --hero-muted: #475569;
+  --hero-border: rgba(148, 163, 184, 0.4);
+  --hero-surface: rgba(248, 250, 252, 0.92);
 }
 
 .hero-banner {
   position: relative;
-  margin: -20px -20px 48px;
-  padding: clamp(48px, 12vw, 96px) 0;
-  background: linear-gradient(180deg, #010a16 0%, #00060d 100%);
+  margin: 0 auto 48px;
+  padding: clamp(48px, 12vw, 96px) 0 clamp(32px, 10vw, 72px);
+  background: transparent;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .hero-strap {
   position: relative;
   width: 100%;
+  max-width: 1180px;
   border-radius: 0 0 clamp(28px, 5vw, 48px) 0;
   padding: clamp(24px, 6vw, 56px) clamp(24px, 6vw, 56px) clamp(48px, 7vw, 64px);
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(3, 37, 65, 0.95) 0%, rgba(7, 48, 73, 0.92) 45%, rgba(3, 21, 45, 0.9) 100%);
-  box-shadow: 0 30px 80px rgba(2, 14, 24, 0.6);
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
-.hero-strap::before {
-  content: '';
-  position: absolute;
-  inset: -30% -35% -20% -35%;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(1, 180, 228, 0.65) 0%, transparent 55%),
-    radial-gradient(circle at 85% 80%, rgba(30, 213, 169, 0.45) 0%, transparent 55%),
-    radial-gradient(circle at 70% 0%, rgba(3, 74, 121, 0.45) 0%, transparent 65%);
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
+.hero-strap::before,
 .hero-strap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.45) 100%);
-  opacity: 0.9;
-  pointer-events: none;
+  content: none;
 }
 
 .hero-top-bar {
@@ -57,7 +46,7 @@
   gap: clamp(16px, 4vw, 32px);
   flex-wrap: wrap;
   padding-bottom: clamp(16px, 3vw, 24px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .hero-top-left {
@@ -72,10 +61,10 @@
   justify-content: center;
   padding: 12px 18px;
   border-radius: clamp(18px, 3vw, 28px);
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--hero-surface);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 30px rgba(148, 163, 184, 0.18);
 }
 
 .hero-logo {
@@ -91,7 +80,7 @@
 
 .hero-nav-link {
   font-size: clamp(14px, 2.4vw, 16px);
-  color: rgba(245, 246, 248, 0.85);
+  color: rgba(15, 23, 42, 0.78);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
@@ -111,8 +100,8 @@
 .hero-login-button {
   padding: 10px 24px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #f8fafc;
   color: var(--hero-text);
   font-weight: 600;
   font-size: clamp(13px, 2.4vw, 15px);
@@ -121,9 +110,9 @@
 }
 
 .hero-login-button:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: #e2e8f0;
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 24px rgba(148, 163, 184, 0.25);
 }
 
 .hero-inner {
@@ -175,7 +164,7 @@
   max-width: 640px;
   font-size: clamp(15px, 2.4vw, 18px);
   line-height: 1.55;
-  color: rgba(245, 246, 248, 0.78);
+  color: var(--hero-muted);
 }
 
 .hero-search-container {
@@ -196,10 +185,10 @@
   gap: 0;
   border-radius: clamp(18px, 4vw, 32px);
   overflow: hidden;
-  background: rgba(2, 20, 38, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 18px 40px rgba(3, 16, 28, 0.55);
-  backdrop-filter: blur(14px);
+  background: var(--hero-surface);
+  border: 1px solid var(--hero-border);
+  box-shadow: 0 14px 32px rgba(148, 163, 184, 0.18);
+  backdrop-filter: blur(10px);
 }
 
 .hero-search-input {
@@ -212,7 +201,7 @@
 }
 
 .hero-search-input::placeholder {
-  color: rgba(245, 246, 248, 0.55);
+  color: rgba(100, 116, 139, 0.7);
 }
 
 .hero-search-input:focus {
@@ -250,14 +239,15 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  background: rgba(2, 17, 30, 0.92);
+  background: #ffffff;
   border-radius: clamp(18px, 4vw, 28px);
-  border: 1px solid rgba(1, 180, 228, 0.4);
+  border: 1px solid var(--hero-border);
   box-shadow:
-    0 18px 50px rgba(0, 8, 15, 0.65),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 18px 40px rgba(148, 163, 184, 0.25),
+    0 0 0 1px rgba(226, 232, 240, 0.6);
   max-height: 320px;
   overflow-y: auto;
+  color: var(--hero-text);
 }
 
 .hero-suggestions::-webkit-scrollbar {
@@ -265,18 +255,18 @@
 }
 
 .hero-suggestions::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(148, 163, 184, 0.6);
   border-radius: 4px;
 }
 
 .hero-suggestions::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(226, 232, 240, 0.3);
 }
 
 .hero-suggestions-empty {
   padding: 18px 24px;
   font-size: 14px;
-  color: rgba(245, 246, 248, 0.75);
+  color: var(--hero-muted);
   text-align: center;
 }
 
@@ -295,7 +285,7 @@
 }
 
 .hero-suggestion-item:hover {
-  background: rgba(1, 180, 228, 0.12);
+  background: rgba(14, 165, 233, 0.12);
   transform: translateX(4px);
 }
 
@@ -305,15 +295,15 @@
   height: 80px;
   border-radius: 12px;
   object-fit: cover;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  background: #f1f5f9;
+  box-shadow: 0 8px 18px rgba(148, 163, 184, 0.25);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   font-weight: 600;
-  color: rgba(245, 246, 248, 0.8);
+  color: var(--hero-muted);
 }
 
 .hero-suggestion-info {
@@ -326,7 +316,7 @@
 .hero-suggestion-title {
   font-size: 15px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--hero-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -334,13 +324,13 @@
 
 .hero-suggestion-meta {
   font-size: 13px;
-  color: rgba(245, 246, 248, 0.65);
+  color: rgba(100, 116, 139, 0.85);
 }
 
 @media (max-width: 900px) {
   .hero-banner {
-    margin: -16px -16px 40px;
-    padding: clamp(32px, 14vw, 72px) 0;
+    margin: 0 0 40px;
+    padding: clamp(32px, 14vw, 72px) 0 clamp(24px, 12vw, 56px);
   }
 
   .hero-strap {

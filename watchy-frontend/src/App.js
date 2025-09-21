@@ -23,7 +23,7 @@ function App() {
   return (
     <div
       className="App"
-      style={{ backgroundColor: '#ffffff', color: '#111827', minHeight: '100vh', padding: '20px' }}
+      style={{ backgroundColor: '#ffffff', color: '#111827', minHeight: '100vh' }}
     >
       {/* Sinematik HeroBanner */}
       <HeroBanner
