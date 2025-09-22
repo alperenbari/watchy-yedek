@@ -4,6 +4,7 @@ import './thematicjourneys.css';
 import { getPlatforms, searchMoviesByPeriod, searchMoviesByDirector } from '../services/api';
 
 const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w185';
+const PROFILE_BASE_URL = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2';
 
 const DECADE_CONFIGS = [
   {
@@ -344,6 +345,69 @@ const DIRECTOR_CARDS = [
         platforms: []
       }
     ]
+  }
+];
+
+const ACTOR_CARDS = [
+  {
+    id: 'tom-cruise',
+    tmdbId: 500,
+    name: 'Tom Cruise',
+    profilePath: '/3mShHjSQR7NXOVbdTu5rT2Qd0MN.jpg'
+  },
+  {
+    id: 'robert-downey-jr',
+    tmdbId: 3223,
+    name: 'Robert Downey Jr.',
+    profilePath: '/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg'
+  },
+  {
+    id: 'scarlett-johansson',
+    tmdbId: 1245,
+    name: 'Scarlett Johansson',
+    profilePath: '/mjReG6rR7NPMEIWb1T4YWtV11ty.jpg'
+  },
+  {
+    id: 'leonardo-dicaprio',
+    tmdbId: 6193,
+    name: 'Leonardo DiCaprio',
+    profilePath: '/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg'
+  },
+  {
+    id: 'dwayne-johnson',
+    tmdbId: 18918,
+    name: 'Dwayne Johnson',
+    profilePath: '/5QApZVV8FUFlVxQpIK3Ew6cqotq.jpg'
+  },
+  {
+    id: 'jennifer-lawrence',
+    tmdbId: 72129,
+    name: 'Jennifer Lawrence',
+    profilePath: '/k6CsASaySnS3ag0Y2Ns2vqPahVn.jpg'
+  },
+  {
+    id: 'brad-pitt',
+    tmdbId: 287,
+    name: 'Brad Pitt',
+    profilePath: '/9OfnD7lxgIj3BNQpJFnwxnwl6w5.jpg'
+  },
+  {
+    id: 'chris-hemsworth',
+    tmdbId: 74568,
+    name: 'Chris Hemsworth',
+    profilePath: '/piQGdoIQOF3C1EI5cbYZLAW1gfj.jpg'
+  },
+  {
+    id: 'angelina-jolie',
+    tmdbId: 11701,
+    name: 'Angelina Jolie',
+    profilePath: '/bXNxIKcJ5cNNW8QFrBPWcfTSu9x.jpg'
+  },
+  {
+    id: 'keanu-reeves',
+    tmdbId: 6384,
+    name: 'Keanu Reeves',
+    profilePath: '/8RZLOyYGsoRe9p44q3xin9QkMHv.jpg'
   }
 ];
 
@@ -1045,6 +1109,23 @@ const ThematicJourneys = ({ onContentChange }) => {
           )}
         </div>
       )}
+
+      <h2 className="section-title">Oyuncular</h2>
+      <div className="actors-grid">
+        {ACTOR_CARDS.map((actor) => (
+          <article key={actor.id} className="actor-card">
+            <div className="actor-photo-wrapper">
+              <img
+                src={`${PROFILE_BASE_URL}${actor.profilePath}`}
+                alt={`${actor.name} portresi`}
+                className="actor-photo"
+                loading="lazy"
+              />
+            </div>
+            <h3 className="actor-name">{actor.name}</h3>
+          </article>
+        ))}
+      </div>
     </section>
   );
 };
