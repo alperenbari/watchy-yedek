@@ -1,7 +1,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import './thematicjourneys.css';
-import { getPlatforms, searchMoviesByPeriod, searchMoviesByDirector } from '../services/api';
+import {
+  getPlatforms,
+  searchMoviesByPeriod,
+  searchMoviesByDirector,
+  searchMoviesByActor
+} from '../services/api';
 
 const POSTER_BASE_URL = 'https://image.tmdb.org/t/p/w185';
 const PROFILE_BASE_URL = 'https://image.tmdb.org/t/p/w300_and_h450_bestv2';
@@ -408,10 +413,70 @@ const ACTOR_CARDS = [
     tmdbId: 6384,
     name: 'Keanu Reeves',
     profilePath: '/8RZLOyYGsoRe9p44q3xin9QkMHv.jpg'
+  },
+  {
+    id: 'meryl-streep',
+    tmdbId: 109,
+    name: 'Meryl Streep',
+    profilePath: '/7UKRbJBNG7mxBl2QQc5XsAh6F8B.jpg'
+  },
+  {
+    id: 'natalie-portman',
+    tmdbId: 524,
+    name: 'Natalie Portman',
+    profilePath: '/edPU5HxncLWa1YkgRPNkSd68ONG.jpg'
+  },
+  {
+    id: 'christian-bale',
+    tmdbId: 3894,
+    name: 'Christian Bale',
+    profilePath: '/7Pxez9J8fuPd2Mn9kex13YALrCQ.jpg'
+  },
+  {
+    id: 'morgan-freeman',
+    tmdbId: 192,
+    name: 'Morgan Freeman',
+    profilePath: '/jPsLqiYGSofU4s6BjrxnefMfabb.jpg'
+  },
+  {
+    id: 'samuel-l-jackson',
+    tmdbId: 2231,
+    name: 'Samuel L. Jackson',
+    profilePath: '/AiAYAqwpM5xmiFrAIeQvUXDCVvo.jpg'
+  },
+  {
+    id: 'cate-blanchett',
+    tmdbId: 112,
+    name: 'Cate Blanchett',
+    profilePath: '/mXpe59YDxcvAJS6EtshsvsRvLZP.jpg'
+  },
+  {
+    id: 'ryan-gosling',
+    tmdbId: 30614,
+    name: 'Ryan Gosling',
+    profilePath: '/asoKC7CLCqpZKZDL6iovNurQUdf.jpg'
+  },
+  {
+    id: 'anne-hathaway',
+    tmdbId: 1813,
+    name: 'Anne Hathaway',
+    profilePath: '/s6tflSD20MGz04ZR2R1lZvhmC4Y.jpg'
+  },
+  {
+    id: 'viola-davis',
+    tmdbId: 90633,
+    name: 'Viola Davis',
+    profilePath: '/qCJB1ACi5VjtY4ypXuv3hjAvbSu.jpg'
+  },
+  {
+    id: 'hugh-jackman',
+    tmdbId: 6968,
+    name: 'Hugh Jackman',
+    profilePath: '/4Xujtewxqt6aU0Y81tsS9gkjizk.jpg'
   }
 ];
 
-const ThematicJourneys = ({ onContentChange }) => {
+const ThematicJourneys = ({ onContentChange, showPeopleSections = false, peopleSectionRef }) => {
   const [moviesByDecade, setMoviesByDecade] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedDecade, setExpandedDecade] = useState(null);
@@ -423,6 +488,10 @@ const ThematicJourneys = ({ onContentChange }) => {
   const [directorDetailMovies, setDirectorDetailMovies] = useState({});
   const [directorDetailLoadingId, setDirectorDetailLoadingId] = useState(null);
   const [directorDetailError, setDirectorDetailError] = useState(null);
+  const [expandedActor, setExpandedActor] = useState(null);
+  const [actorDetailMovies, setActorDetailMovies] = useState({});
+  const [actorDetailLoadingId, setActorDetailLoadingId] = useState(null);
+  const [actorDetailError, setActorDetailError] = useState(null);
 
   const dedupePlatforms = (platforms) =>
     Array.isArray(platforms)
@@ -528,6 +597,8 @@ const ThematicJourneys = ({ onContentChange }) => {
 
     setExpandedDirector(null);
     setDirectorDetailError(null);
+    setExpandedActor(null);
+    setActorDetailError(null);
 
     if (expandedDecade === journey.id) {
       setExpandedDecade(null);
@@ -613,6 +684,8 @@ const ThematicJourneys = ({ onContentChange }) => {
 
     setExpandedDecade(null);
     setDetailError(null);
+    setExpandedActor(null);
+    setActorDetailError(null);
 
     if (expandedDirector === director.id) {
       setExpandedDirector(null);
@@ -704,6 +777,104 @@ const ThematicJourneys = ({ onContentChange }) => {
     }
   };
 
+  const handleActorSelect = async (actor) => {
+    if (!actor) return;
+
+    setExpandedDecade(null);
+    setDetailError(null);
+    setExpandedDirector(null);
+    setDirectorDetailError(null);
+
+    if (expandedActor === actor.id) {
+      setExpandedActor(null);
+      setActorDetailError(null);
+      return;
+    }
+
+    if (typeof onContentChange === 'function') {
+      onContentChange();
+    }
+
+    setExpandedActor(actor.id);
+    setActorDetailError(null);
+
+    if (actorDetailMovies[actor.id]) {
+      return;
+    }
+
+    if (!actor.tmdbId) {
+      setActorDetailError('Bu oyuncu için film bilgisi bulunamadı.');
+      return;
+    }
+
+    try {
+      setActorDetailLoadingId(actor.id);
+      const movies = await searchMoviesByActor(actor.tmdbId);
+
+      const platformUpdates = {};
+
+      const formattedMovies = await Promise.all(
+        (Array.isArray(movies) ? movies : []).map(async (movie) => {
+          const movieId = movie.movie_id || movie.id;
+
+          if (!movieId) {
+            return null;
+          }
+
+          if (!platformUpdates[movieId]) {
+            if (platformsByMovieId[movieId]) {
+              platformUpdates[movieId] = platformsByMovieId[movieId];
+            } else {
+              try {
+                const platformRes = await getPlatforms(movieId);
+                platformUpdates[movieId] = {
+                  platforms: Array.isArray(platformRes?.platforms)
+                    ? platformRes.platforms
+                    : [],
+                  link: platformRes?.link ?? ''
+                };
+              } catch (error) {
+                console.error(`Platform bilgisi alınamadı (${movieId}):`, error);
+                platformUpdates[movieId] = {
+                  platforms: [],
+                  link: ''
+                };
+              }
+            }
+          }
+
+          const platformInfo = platformUpdates[movieId] || { platforms: [], link: '' };
+
+          return {
+            id: movieId,
+            title: movie.title,
+            posterUrl: movie.poster_path ? `${POSTER_BASE_URL}${movie.poster_path}` : null,
+            director: movie.director || null,
+            cast: Array.isArray(movie.cast) ? movie.cast.slice(0, 3) : [],
+            releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : null,
+            platforms: platformInfo.platforms,
+            link: platformInfo.link
+          };
+        })
+      );
+
+      const filteredMovies = formattedMovies
+        .filter((movie) => movie && movie.platforms.length > 0)
+        .slice(0, 12);
+
+      setActorDetailMovies((prev) => ({
+        ...prev,
+        [actor.id]: filteredMovies
+      }));
+      setPlatformsByMovieId((prev) => ({ ...prev, ...platformUpdates }));
+    } catch (error) {
+      console.error('Error fetching actor highlights:', error);
+      setActorDetailError('Bu oyuncunun filmleri alınırken bir sorun oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setActorDetailLoadingId(null);
+    }
+  };
+
   const handleKeyPress = (event, journey) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -718,6 +889,13 @@ const ThematicJourneys = ({ onContentChange }) => {
     }
   };
 
+  const handleActorKeyPress = (event, actor) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleActorSelect(actor);
+    }
+  };
+
   const activeJourney = useMemo(
     () => journeys.find((journey) => journey.id === expandedDecade) || null,
     [expandedDecade, journeys]
@@ -726,6 +904,11 @@ const ThematicJourneys = ({ onContentChange }) => {
   const activeDirector = useMemo(
     () => DIRECTOR_CARDS.find((director) => director.id === expandedDirector) || null,
     [expandedDirector]
+  );
+
+  const activeActor = useMemo(
+    () => ACTOR_CARDS.find((actor) => actor.id === expandedActor) || null,
+    [expandedActor]
   );
 
   if (loading) {
@@ -953,179 +1136,310 @@ const ThematicJourneys = ({ onContentChange }) => {
         </div>
       )}
 
-      <h2 className="section-title">Yönetmenler</h2>
-      <div className="journeys-container directors-container">
-        {DIRECTOR_CARDS.map((director) => (
-          <div
-            key={director.id}
-            className={`journey-card director-card${expandedDirector === director.id ? ' journey-card--active' : ''}`}
-            style={{ backgroundColor: director.color }}
-            onClick={() => handleDirectorSelect(director)}
-            onKeyDown={(event) => handleDirectorKeyPress(event, director)}
-            role="button"
-            tabIndex={0}
-            aria-expanded={expandedDirector === director.id}
-          >
-            <div className="journey-header">
-              <h3 className="journey-title">{director.title}</h3>
-              {director.subtitle && <h4 className="journey-subtitle">{director.subtitle}</h4>}
-              {director.description && (
-                <p className="journey-description">{director.description}</p>
-              )}
-            </div>
-
-            <div className="journey-movies">
-              {director.movies.map((movie) => (
-                <div key={movie.id} className="movie-poster">
-                  {movie.poster_path ? (
-                    <img
-                      src={`${POSTER_BASE_URL}${movie.poster_path}`}
-                      alt={`${movie.title} film afişi`}
-                      className="poster-image"
-                    />
-                  ) : (
-                    <div className="poster-placeholder" aria-hidden="true">
-                      🎬
-                    </div>
+      {showPeopleSections && (
+        <div
+          id="kisiler"
+          ref={peopleSectionRef || null}
+          className="people-section"
+        >
+          <h2 className="section-title">Yönetmenler</h2>
+          <div className="journeys-container directors-container">
+            {DIRECTOR_CARDS.map((director) => (
+              <div
+                key={director.id}
+                className={`journey-card director-card${expandedDirector === director.id ? ' journey-card--active' : ''}`}
+                style={{ backgroundColor: director.color }}
+                onClick={() => handleDirectorSelect(director)}
+                onKeyDown={(event) => handleDirectorKeyPress(event, director)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={expandedDirector === director.id}
+              >
+                <div className="journey-header">
+                  <h3 className="journey-title">{director.title}</h3>
+                  {director.subtitle && <h4 className="journey-subtitle">{director.subtitle}</h4>}
+                  {director.description && (
+                    <p className="journey-description">{director.description}</p>
                   )}
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {activeDirector && (
-        <div className="journey-detail-panel">
-          <div className="journey-detail-header">
-            <div className="journey-detail-headline">
-              <span className="journey-detail-years">Yönetmen</span>
-              <h3 className="journey-detail-title">{activeDirector.title}</h3>
-              {activeDirector.subtitle && (
-                <p className="journey-detail-subtitle">{activeDirector.subtitle}</p>
-              )}
-            </div>
 
-            <button
-              type="button"
-              className="journey-detail-close"
-              onClick={() => {
-                setExpandedDirector(null);
-                setDirectorDetailError(null);
-              }}
-            >
-              Kapat
-            </button>
-          </div>
-
-          {activeDirector.description && (
-            <p className="journey-detail-description">{activeDirector.description}</p>
-          )}
-
-          {directorDetailLoadingId === activeDirector.id ? (
-            <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
-          ) : directorDetailError ? (
-            <div className="journey-detail-error">{directorDetailError}</div>
-          ) : (directorDetailMovies[activeDirector.id] || []).length === 0 ? (
-            <div className="journey-detail-empty">Bu yönetmenin platformlarda izlenebilecek filmi bulunamadı.</div>
-          ) : (
-            <div className="detail-movie-list">
-              {(directorDetailMovies[activeDirector.id] || []).map((movie) => {
-                const uniquePlatforms = dedupePlatforms(movie.platforms);
-                const movieLink = movie.link || (movie.id ? platformsByMovieId[movie.id]?.link : '');
-
-                return (
-                  <article key={movie.id} className="detail-movie-card">
-                    <div className="detail-movie-poster">
-                      {movie.posterUrl ? (
-                        <img src={movie.posterUrl} alt={movie.title} />
+                <div className="journey-movies">
+                  {director.movies.map((movie) => (
+                    <div key={movie.id} className="movie-poster">
+                      {movie.poster_path ? (
+                        <img
+                          src={`${POSTER_BASE_URL}${movie.poster_path}`}
+                          alt={`${movie.title} film afişi`}
+                          className="poster-image"
+                        />
                       ) : (
-                        <div className="detail-movie-placeholder" aria-hidden="true">
-                          🎞️
+                        <div className="poster-placeholder" aria-hidden="true">
+                          🎬
                         </div>
                       )}
                     </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          {activeDirector && (
+            <div className="journey-detail-panel">
+              <div className="journey-detail-header">
+                <div className="journey-detail-headline">
+                  <span className="journey-detail-years">Yönetmen</span>
+                  <h3 className="journey-detail-title">{activeDirector.title}</h3>
+                  {activeDirector.subtitle && (
+                    <p className="journey-detail-subtitle">{activeDirector.subtitle}</p>
+                  )}
+                </div>
 
-                    <div className="detail-movie-meta">
-                      <h4 className="detail-movie-title">
-                        {movie.title}
-                        {movie.releaseYear ? (
-                          <span className="detail-movie-year"> ({movie.releaseYear})</span>
-                        ) : null}
-                      </h4>
-                      <p className="detail-movie-director">
-                        {movie.director ? `Yönetmen: ${movie.director}` : 'Yönetmen bilgisi bulunamadı'}
-                      </p>
-                      {movie.cast.length > 0 && (
-                        <p className="detail-movie-cast">
-                          Başroller: {movie.cast.join(', ')}
-                        </p>
-                      )}
-                      <div className="detail-movie-platforms">
-                        {uniquePlatforms.map((platform) => {
-                          const linkForPlatform =
-                            platform?.direct_link ||
-                            platform?.external_link ||
-                            movieLink;
-                          const badgeContent = (
-                            <>
-                              <img
-                                src={
-                                  platform?.logo_path === '/yt'
-                                    ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
-                                    : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
-                                }
-                                alt={platform?.provider_name}
-                                title={platform?.provider_name}
-                              />
-                              <span>{platform?.provider_name}</span>
-                            </>
-                          );
+                <button
+                  type="button"
+                  className="journey-detail-close"
+                  onClick={() => {
+                    setExpandedDirector(null);
+                    setDirectorDetailError(null);
+                  }}
+                >
+                  Kapat
+                </button>
+              </div>
 
-                          return linkForPlatform ? (
-                            <a
-                              key={platform?.provider_id || platform?.provider_name}
-                              className="platform-badge"
-                              href={linkForPlatform}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {badgeContent}
-                            </a>
+              {activeDirector.description && (
+                <p className="journey-detail-description">{activeDirector.description}</p>
+              )}
+
+              {directorDetailLoadingId === activeDirector.id ? (
+                <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
+              ) : directorDetailError ? (
+                <div className="journey-detail-error">{directorDetailError}</div>
+              ) : (directorDetailMovies[activeDirector.id] || []).length === 0 ? (
+                <div className="journey-detail-empty">Bu yönetmenin platformlarda izlenebilecek filmi bulunamadı.</div>
+              ) : (
+                <div className="detail-movie-list">
+                  {(directorDetailMovies[activeDirector.id] || []).map((movie) => {
+                    const uniquePlatforms = dedupePlatforms(movie.platforms);
+                    const movieLink = movie.link || (movie.id ? platformsByMovieId[movie.id]?.link : '');
+
+                    return (
+                      <article key={movie.id} className="detail-movie-card">
+                        <div className="detail-movie-poster">
+                          {movie.posterUrl ? (
+                            <img src={movie.posterUrl} alt={movie.title} />
                           ) : (
-                            <div
-                              key={platform?.provider_id || platform?.provider_name}
-                              className="platform-badge"
-                            >
-                              {badgeContent}
+                            <div className="detail-movie-placeholder" aria-hidden="true">
+                              🎞️
                             </div>
-                          );
-                        })}
-                      </div>
+                          )}
+                        </div>
+
+                        <div className="detail-movie-meta">
+                          <h4 className="detail-movie-title">
+                            {movie.title}
+                            {movie.releaseYear ? (
+                              <span className="detail-movie-year"> ({movie.releaseYear})</span>
+                            ) : null}
+                          </h4>
+                          <p className="detail-movie-director">
+                            {movie.director ? `Yönetmen: ${movie.director}` : 'Yönetmen bilgisi bulunamadı'}
+                          </p>
+                          {movie.cast.length > 0 && (
+                            <p className="detail-movie-cast">
+                              Başroller: {movie.cast.join(', ')}
+                            </p>
+                          )}
+                          <div className="detail-movie-platforms">
+                            {uniquePlatforms.map((platform) => {
+                              const linkForPlatform =
+                                platform?.direct_link ||
+                                platform?.external_link ||
+                                movieLink;
+                              const badgeContent = (
+                                <>
+                                  <img
+                                    src={
+                                      platform?.logo_path === '/yt'
+                                        ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                        : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                                    }
+                                    alt={platform?.provider_name}
+                                    title={platform?.provider_name}
+                                  />
+                                  <span>{platform?.provider_name}</span>
+                                </>
+                              );
+
+                              return linkForPlatform ? (
+                                <a
+                                  key={platform?.provider_id || platform?.provider_name}
+                                  className="platform-badge"
+                                  href={linkForPlatform}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {badgeContent}
+                                </a>
+                              ) : (
+                                <div
+                                  key={platform?.provider_id || platform?.provider_name}
+                                  className="platform-badge"
+                                >
+                                  {badgeContent}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          <h2 className="section-title">Oyuncular</h2>
+          <div className="actors-grid">
+            {ACTOR_CARDS.map((actor) => (
+              <article
+                key={actor.id}
+                className={`actor-card${expandedActor === actor.id ? ' actor-card--active' : ''}`}
+                onClick={() => handleActorSelect(actor)}
+                onKeyDown={(event) => handleActorKeyPress(event, actor)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={expandedActor === actor.id}
+              >
+                <div className="actor-photo-wrapper">
+                  {actor.profilePath ? (
+                    <img
+                      src={`${PROFILE_BASE_URL}${actor.profilePath}`}
+                      alt={`${actor.name} portresi`}
+                      className="actor-photo"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="actor-photo-placeholder" aria-hidden="true">
+                      🎭
                     </div>
-                  </article>
-                );
-              })}
+                  )}
+                </div>
+                <h3 className="actor-name">{actor.name}</h3>
+              </article>
+            ))}
+          </div>
+
+          {activeActor && (
+            <div className="journey-detail-panel actor-detail-panel">
+              <div className="journey-detail-header">
+                <div className="journey-detail-headline">
+                  <span className="journey-detail-years">Oyuncu</span>
+                  <h3 className="journey-detail-title">{activeActor.name}</h3>
+                </div>
+
+                <button
+                  type="button"
+                  className="journey-detail-close"
+                  onClick={() => {
+                    setExpandedActor(null);
+                    setActorDetailError(null);
+                  }}
+                >
+                  Kapat
+                </button>
+              </div>
+
+              {actorDetailLoadingId === activeActor.id ? (
+                <div className="journey-detail-loading">Sahne hazırlanıyor...</div>
+              ) : actorDetailError ? (
+                <div className="journey-detail-error">{actorDetailError}</div>
+              ) : (actorDetailMovies[activeActor.id] || []).length === 0 ? (
+                <div className="journey-detail-empty">Bu oyuncunun platformlarda izlenebilecek filmi bulunamadı.</div>
+              ) : (
+                <div className="detail-movie-list">
+                  {(actorDetailMovies[activeActor.id] || []).map((movie) => {
+                    const uniquePlatforms = dedupePlatforms(movie.platforms);
+                    const movieLink = movie.link || (movie.id ? platformsByMovieId[movie.id]?.link : '');
+
+                    return (
+                      <article key={movie.id} className="detail-movie-card">
+                        <div className="detail-movie-poster">
+                          {movie.posterUrl ? (
+                            <img src={movie.posterUrl} alt={movie.title} />
+                          ) : (
+                            <div className="detail-movie-placeholder" aria-hidden="true">
+                              🎞️
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="detail-movie-meta">
+                          <h4 className="detail-movie-title">
+                            {movie.title}
+                            {movie.releaseYear ? (
+                              <span className="detail-movie-year"> ({movie.releaseYear})</span>
+                            ) : null}
+                          </h4>
+                          <p className="detail-movie-director">
+                            {movie.director ? `Yönetmen: ${movie.director}` : 'Yönetmen bilgisi bulunamadı'}
+                          </p>
+                          {movie.cast.length > 0 && (
+                            <p className="detail-movie-cast">
+                              Başroller: {movie.cast.join(', ')}
+                            </p>
+                          )}
+                          <div className="detail-movie-platforms">
+                            {uniquePlatforms.map((platform) => {
+                              const linkForPlatform =
+                                platform?.direct_link ||
+                                platform?.external_link ||
+                                movieLink;
+                              const badgeContent = (
+                                <>
+                                  <img
+                                    src={
+                                      platform?.logo_path === '/yt'
+                                        ? 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_(2017).svg'
+                                        : `https://image.tmdb.org/t/p/w92${platform?.logo_path}`
+                                    }
+                                    alt={platform?.provider_name}
+                                    title={platform?.provider_name}
+                                  />
+                                  <span>{platform?.provider_name}</span>
+                                </>
+                              );
+
+                              return linkForPlatform ? (
+                                <a
+                                  key={platform?.provider_id || platform?.provider_name}
+                                  className="platform-badge"
+                                  href={linkForPlatform}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {badgeContent}
+                                </a>
+                              ) : (
+                                <div
+                                  key={platform?.provider_id || platform?.provider_name}
+                                  className="platform-badge"
+                                >
+                                  {badgeContent}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
-
-      <h2 className="section-title">Oyuncular</h2>
-      <div className="actors-grid">
-        {ACTOR_CARDS.map((actor) => (
-          <article key={actor.id} className="actor-card">
-            <div className="actor-photo-wrapper">
-              <img
-                src={`${PROFILE_BASE_URL}${actor.profilePath}`}
-                alt={`${actor.name} portresi`}
-                className="actor-photo"
-                loading="lazy"
-              />
-            </div>
-            <h3 className="actor-name">{actor.name}</h3>
-          </article>
-        ))}
-      </div>
     </section>
   );
 };

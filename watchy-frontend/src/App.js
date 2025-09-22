@@ -8,6 +8,8 @@ import ThematicJourneys from './components/thematicjourneys';
 function App() {
   const [showThematicJourneys, setShowThematicJourneys] = useState(false);
   const thematicSectionRef = useRef(null);
+  const [showPeopleSections, setShowPeopleSections] = useState(false);
+  const peopleSectionRef = useRef(null);
   const {
     searchResults,
     platforms,
@@ -28,6 +30,12 @@ function App() {
     }
   };
 
+  const scrollToPeopleSection = () => {
+    if (peopleSectionRef.current) {
+      peopleSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleFilmsClick = () => {
     if (showThematicJourneys) {
       scrollToThematicSection();
@@ -37,11 +45,30 @@ function App() {
     setShowThematicJourneys(true);
   };
 
+  const handlePeopleClick = () => {
+    if (!showThematicJourneys) {
+      setShowThematicJourneys(true);
+    }
+
+    if (!showPeopleSections) {
+      setShowPeopleSections(true);
+      return;
+    }
+
+    scrollToPeopleSection();
+  };
+
   useEffect(() => {
     if (showThematicJourneys) {
       scrollToThematicSection();
     }
   }, [showThematicJourneys]);
+
+  useEffect(() => {
+    if (showThematicJourneys && showPeopleSections) {
+      scrollToPeopleSection();
+    }
+  }, [showThematicJourneys, showPeopleSections]);
 
   return (
     <div className="App">
@@ -50,12 +77,17 @@ function App() {
         title="Sadece İZLENEBİLİR ve EN İYİ içerikler!"
         onSearch={handleHeroSearch}
         onFilmsClick={handleFilmsClick}
+        onPeopleClick={handlePeopleClick}
       />
 
       <div className="app-main">
         {!hasCompletedSearch && showThematicJourneys && (
           <div id="filmler" ref={thematicSectionRef}>
-            <ThematicJourneys onContentChange={resetResults} />
+            <ThematicJourneys
+              onContentChange={resetResults}
+              showPeopleSections={showPeopleSections}
+              peopleSectionRef={peopleSectionRef}
+            />
           </div>
         )}
 
