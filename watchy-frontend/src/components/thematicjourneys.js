@@ -1060,7 +1060,11 @@ const ThematicJourneys = ({
         <>
           <h2 className="section-title">Dönem Filmleri</h2>
           {loading ? (
-            <div className="loading-placeholder">Filmler makaraya sarılıyor...</div>
+            <div
+              className="loading-placeholder"
+              role="status"
+              aria-label="İçerik yükleniyor"
+            />
           ) : (
             <>
               <div className="journeys-container">
@@ -1190,7 +1194,11 @@ const ThematicJourneys = ({
                   <p className="journey-detail-description">{activeJourney.description}</p>
 
                   {detailLoadingDecade === activeJourney.id ? (
-                    <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
+                    <div
+                      className="journey-detail-loading"
+                      role="status"
+                      aria-label="İçerik yükleniyor"
+                    />
                   ) : detailError ? (
                     <div className="journey-detail-error">{detailError}</div>
                   ) : (detailMovies[activeJourney.id] || []).length === 0 ? (
@@ -1355,7 +1363,11 @@ const ThematicJourneys = ({
               )}
 
               {directorDetailLoadingId === activeDirector.id ? (
-                <div className="journey-detail-loading">Hollywood spotları açılıyor...</div>
+                <div
+                  className="journey-detail-loading"
+                  role="status"
+                  aria-label="İçerik yükleniyor"
+                />
               ) : directorDetailError ? (
                 <div className="journey-detail-error">{directorDetailError}</div>
               ) : (directorDetailMovies[activeDirector.id] || []).length === 0 ? (
@@ -1495,7 +1507,11 @@ const ThematicJourneys = ({
               </div>
 
               {actorDetailLoadingId === activeActor.id ? (
-                <div className="journey-detail-loading">Sahne hazırlanıyor...</div>
+                <div
+                  className="journey-detail-loading"
+                  role="status"
+                  aria-label="İçerik yükleniyor"
+                />
               ) : actorDetailError ? (
                 <div className="journey-detail-error">{actorDetailError}</div>
               ) : (actorDetailMovies[activeActor.id] || []).length === 0 ? (
