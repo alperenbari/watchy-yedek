@@ -42,6 +42,10 @@ function App() {
       setShowThematicJourneys(true);
     }
 
+    if (showPeopleSections) {
+      setShowPeopleSections(false);
+    }
+
     if (!showPeriodSections) {
       setShowPeriodSections(true);
       return;
