@@ -261,6 +261,35 @@ async function getMoviesByActor(personId, { limit = 40 } = {}) {
   }
 }
 
+async function getPersonDetails(personId) {
+  ensureCredentials();
+
+  const numericId = Number.parseInt(personId, 10);
+
+  if (!Number.isFinite(numericId)) {
+    throw new Error('Geçersiz kişi kimliği.');
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/person/${numericId}`,
+      withTmdbAuth({ params: { language: 'en-US' } })
+    );
+
+    const data = response.data || {};
+
+    return {
+      id: data.id ?? numericId,
+      name: data.name || null,
+      profile_path: data.profile_path || null,
+      known_for_department: data.known_for_department || null
+    };
+  } catch (error) {
+    console.error('🎬 Kişi bilgisi alınamadı:', error?.message || error);
+    throw error;
+  }
+}
+
 const REGION_TURKEY = 'TR';
 const CATEGORY_PRIORITY = ['flatrate', 'free', 'ads', 'rent', 'buy'];
 
@@ -587,5 +616,6 @@ module.exports = {
   getCredits,
   getWatchProviders,
   getMoviesByDirector,
-  getMoviesByActor
+  getMoviesByActor,
+  getPersonDetails
 };

@@ -8,6 +8,7 @@ const searchByDirectorRoute = require('./routes/searchByDirector');
 const searchByActorRoute = require('./routes/searchByActor');
 const platformsRoute = require('./routes/platforms');
 const moviesRoute = require('./routes/movies');
+const personRoute = require('./routes/person');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -22,6 +23,7 @@ app.use('/api/search/actor', searchByActorRoute);       // Örn: /api/search/act
 app.use('/api/search', searchRoute);                 // Örn: /api/search/:query
 app.use('/api/platforms', platformsRoute);           // Örn: /api/platforms/:movieId
 app.use('/api/movies', moviesRoute);                 // Örn: /api/movies/decade?start=YYYY&end=YYYY
+app.use('/api/person', personRoute);                 // Örn: /api/person/:personId
 
 // Sunucuyu başlat
 app.listen(PORT, () => {

@@ -7,6 +7,7 @@ import ThematicJourneys from './components/thematicjourneys';
 
 function App() {
   const [showThematicJourneys, setShowThematicJourneys] = useState(false);
+  const [showPeriodSections, setShowPeriodSections] = useState(false);
   const thematicSectionRef = useRef(null);
   const [showPeopleSections, setShowPeopleSections] = useState(false);
   const peopleSectionRef = useRef(null);
@@ -37,17 +38,25 @@ function App() {
   };
 
   const handleFilmsClick = () => {
-    if (showThematicJourneys) {
-      scrollToThematicSection();
+    if (!showThematicJourneys) {
+      setShowThematicJourneys(true);
+    }
+
+    if (!showPeriodSections) {
+      setShowPeriodSections(true);
       return;
     }
 
-    setShowThematicJourneys(true);
+    scrollToThematicSection();
   };
 
   const handlePeopleClick = () => {
     if (!showThematicJourneys) {
       setShowThematicJourneys(true);
+    }
+
+    if (showPeriodSections) {
+      setShowPeriodSections(false);
     }
 
     if (!showPeopleSections) {
@@ -59,10 +68,10 @@ function App() {
   };
 
   useEffect(() => {
-    if (showThematicJourneys) {
+    if (showThematicJourneys && showPeriodSections) {
       scrollToThematicSection();
     }
-  }, [showThematicJourneys]);
+  }, [showThematicJourneys, showPeriodSections]);
 
   useEffect(() => {
     if (showThematicJourneys && showPeopleSections) {
@@ -85,6 +94,7 @@ function App() {
           <div id="filmler" ref={thematicSectionRef}>
             <ThematicJourneys
               onContentChange={resetResults}
+              showPeriodSections={showPeriodSections}
               showPeopleSections={showPeopleSections}
               peopleSectionRef={peopleSectionRef}
             />

@@ -89,3 +89,14 @@ export const searchMoviesByActor = (actorId) => {
     'Oyuncuya göre film arama başarısız'
   );
 };
+
+export const getPersonDetails = (personId) => {
+  if (personId == null || personId === '') {
+    return Promise.resolve(null);
+  }
+
+  return fetchJson(
+    `/person/${encodeURIComponent(personId)}`,
+    'Kişi bilgisi alınamadı'
+  );
+};
