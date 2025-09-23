@@ -274,9 +274,9 @@
 }
 
 .loading-placeholder {
-  text-align: center;
-  color: #999;
-  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 40px;
 }
 
@@ -351,6 +351,36 @@
   text-align: center;
   color: rgba(226, 232, 240, 0.75);
   font-size: 1.1rem;
+}
+
+.journey-detail-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journey-detail-loading,
+.loading-placeholder {
+  position: relative;
+  min-height: 40px;
+}
+
+.journey-detail-loading::after,
+.loading-placeholder::after {
+  content: '';
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(148, 163, 184, 0.35);
+  border-top-color: rgba(226, 232, 240, 0.9);
+  animation: thematic-loading-spin 0.85s linear infinite;
+  display: inline-block;
+}
+
+@keyframes thematic-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .journey-detail-error {

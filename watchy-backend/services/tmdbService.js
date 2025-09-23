@@ -17,8 +17,27 @@ function ensureCredentials() {
   }
 }
 
+const CREDITS_CACHE = new Map();
+
+function cloneMovieSearchResult(movie) {
+  return {
+    movie_id: movie.movie_id,
+    title: movie.title,
+    poster_path: movie.poster_path,
+    overview: movie.overview,
+    release_date: movie.release_date,
+    director: movie.director,
+    cast: Array.isArray(movie.cast) ? [...movie.cast] : []
+  };
+}
+
 async function getCredits(movieId) {
   ensureCredentials();
+
+  if (CREDITS_CACHE.has(movieId)) {
+    return CREDITS_CACHE.get(movieId);
+  }
+
   try {
     const res = await axios.get(
       `https://api.themoviedb.org/3/movie/${movieId}/credits`,
@@ -30,16 +49,47 @@ async function getCredits(movieId) {
 
     const director = crew.find(person => person.job === 'Director')?.name || null;
     const topCast = cast.slice(0, 5).map(actor => actor.name);
+    const credits = { director, cast: topCast };
 
-    return { director, cast: topCast };
+    CREDITS_CACHE.set(movieId, credits);
+    return credits;
   } catch (err) {
     console.error(`🎬 Credits alınamadı (ID: ${movieId}):`, err.message);
-    return { director: null, cast: [] };
+    const fallback = { director: null, cast: [] };
+    CREDITS_CACHE.set(movieId, fallback);
+    return fallback;
   }
 }
 
 const SEARCH_LANGUAGES = ['tr-TR', 'en-US'];
 const MAX_SEARCH_PAGES = 5;
+const SEARCH_CACHE = new Map();
+const SEARCH_CACHE_TTL_MS = 5 * 60 * 1000;
+
+function getSearchCacheKey(query, normalizedQuery) {
+  return `${query.toLowerCase()}::${normalizedQuery || ''}`;
+}
+
+function readSearchCache(key) {
+  const entry = SEARCH_CACHE.get(key);
+  if (!entry) {
+    return null;
+  }
+
+  if (Date.now() - entry.timestamp > SEARCH_CACHE_TTL_MS) {
+    SEARCH_CACHE.delete(key);
+    return null;
+  }
+
+  return entry.data.map(cloneMovieSearchResult);
+}
+
+function writeSearchCache(key, value) {
+  SEARCH_CACHE.set(key, {
+    timestamp: Date.now(),
+    data: value.map(cloneMovieSearchResult)
+  });
+}
 
 async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(rawQuery || '')) {
   ensureCredentials();
@@ -51,8 +101,14 @@ async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(raw
     return [];
   }
 
+  const cacheKey = getSearchCacheKey(sanitizedQuery, normalizedQuery);
+  const cachedResults = readSearchCache(cacheKey);
+  if (cachedResults) {
+    return cachedResults;
+  }
+
   const seen = new Set();
-  const resultsWithCredits = [];
+  const baseResults = [];
 
   for (const language of SEARCH_LANGUAGES) {
     for (let page = 1; page <= MAX_SEARCH_PAGES; page++) {
@@ -88,16 +144,12 @@ async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(raw
 
         seen.add(film.id);
 
-        const { director, cast } = await getCredits(film.id);
-
-        resultsWithCredits.push({
+        baseResults.push({
           movie_id: film.id,
           title: film.title,
           poster_path: film.poster_path,
           overview: film.overview,
-          release_date: film.release_date,
-          director,
-          cast
+          release_date: film.release_date
         });
       }
 
@@ -108,7 +160,21 @@ async function searchMoviesWithCredits(rawQuery, normalizedQuery = normalize(raw
     }
   }
 
-  return resultsWithCredits;
+  const resultsWithCredits = await Promise.all(
+    baseResults.map(async (movie) => {
+      const { director, cast } = await getCredits(movie.movie_id);
+
+      return {
+        ...movie,
+        director,
+        cast
+      };
+    })
+  );
+
+  writeSearchCache(cacheKey, resultsWithCredits);
+
+  return resultsWithCredits.map(cloneMovieSearchResult);
 }
 
 async function getMoviesByDirector(personId, { limit = 40 } = {}) {
