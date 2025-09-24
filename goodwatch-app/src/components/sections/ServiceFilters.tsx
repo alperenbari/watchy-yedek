@@ -4,7 +4,10 @@ import type { ServiceFilter } from "@/types/content";
 
 export function ServiceFilters({ services }: { services: ServiceFilter[] }) {
   return (
-    <section className="rounded-3xl border border-white/10 bg-black/40 p-6 shadow-card md:p-10">
+    <section
+      id="services"
+      className="rounded-3xl border border-white/10 bg-black/40 p-6 shadow-card md:p-10"
+    >
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Streaming services</h2>
@@ -16,7 +19,7 @@ export function ServiceFilters({ services }: { services: ServiceFilter[] }) {
           Configure regions
         </button>
       </div>
-      <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {services.map((service) => (
           <button
             key={service.id}

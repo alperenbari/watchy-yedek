@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 const navItems = [
-  { label: "Films", href: "#movies" },
-  { label: "Series", href: "#series" },
+  { label: "Discover", href: "#discover" },
+  { label: "Now streaming", href: "#now-streaming" },
+  { label: "Moods", href: "#moods" },
   { label: "Collections", href: "#collections" },
   { label: "Critics", href: "#critics" },
+  { label: "Services", href: "#services" },
 ];
 
 export function Header() {

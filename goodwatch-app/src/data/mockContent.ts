@@ -2,7 +2,9 @@ import type {
   ContentSummary,
   CriticsHighlight,
   CuratedCollection,
+  DiscoveryBucket,
   HeroFeature,
+  MoodSpotlight,
   ServiceFilter,
 } from "@/types/content";
 
@@ -54,6 +56,22 @@ const defaultPlatforms = {
       "https://images.ctfassets.net/4cd45et68cgf/3MKbUyGJPDd7CMqsH2mkyS/7b8792c673217e9b852ebbce125dc377/Max_logo.svg",
     type: "stream" as const,
     regions: ["US", "BR", "MX"],
+  },
+  youtube: {
+    id: "youtube",
+    name: "YouTube Movies",
+    logoUrl:
+      "https://images.ctfassets.net/4cd45et68cgf/2zeXW6czEtvfh0Yiml8PgV/0481219777084fa1cb1b716b0dff78ea/YouTube_full-color_icon.svg",
+    type: "rent" as const,
+    regions: ["US", "TR", "CA"],
+  },
+  bluTV: {
+    id: "blutv",
+    name: "BluTV",
+    logoUrl:
+      "https://images.ctfassets.net/4cd45et68cgf/2O2njMJZ3gDaaFjt9z76ZQ/d7286213b5630f82a7a0a79ce784a333/BluTV_Logo.svg",
+    type: "subscription" as const,
+    regions: ["TR"],
   },
 };
 
@@ -170,6 +188,119 @@ const shogun: ContentSummary = {
   platforms: [defaultPlatforms.disney, defaultPlatforms.apple],
 };
 
+const oppenheimer: ContentSummary = {
+  id: 872585,
+  title: "Oppenheimer",
+  type: "movie",
+  releaseYear: 2023,
+  tagline: "The world forever changes.",
+  synopsis:
+    "The story of J. Robert Oppenheimer and the creation of the atomic bomb during World War II.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/8O4eOZ2bV9T9G0ZQ2pYbJzLdlYj.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/cIztAxDn3H8JylRaJwiHHpkGe7.jpg",
+  moods: ["Biopic", "Historical", "Intense"],
+  ratings: [
+    { source: "tmdb", score: 8.1, scale: 10 },
+    { source: "imdb", score: 89, scale: 100 },
+    { source: "metacritic", score: 88, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.prime, defaultPlatforms.apple],
+};
+
+const pastLives: ContentSummary = {
+  id: 804095,
+  title: "Past Lives",
+  type: "movie",
+  releaseYear: 2023,
+  tagline: "An unforgettable modern romance.",
+  synopsis:
+    "Nora and Hae Sung, two deeply connected childhood friends, are wrest apart when Nora's family emigrates from South Korea. Years later, they reunite for one fateful week.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/kdPMUMJzyYAc4roD52qavX0nLIC.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/r76qHdwRkqUEYdSJBZ0cG3eIlyU.jpg",
+  moods: ["Tender", "Melancholic", "Romantic"],
+  ratings: [
+    { source: "tmdb", score: 8.0, scale: 10 },
+    { source: "imdb", score: 86, scale: 100 },
+    { source: "metacritic", score: 94, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.mubi, defaultPlatforms.prime],
+};
+
+const succession: ContentSummary = {
+  id: 1399,
+  title: "Succession",
+  type: "series",
+  releaseYear: 2018,
+  tagline: "Make your move.",
+  synopsis:
+    "The Roy family controls one of the biggest media and entertainment conglomerates in the world. However, their world changes when their father steps down from the company.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/7XM2yQTHqk5B6XcH2qOSiFZqOeO.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/c1zrLrA1GpG3HdWu3UwG4PsL0tN.jpg",
+  moods: ["Corporate", "Darkly funny", "Sharp"],
+  ratings: [
+    { source: "tmdb", score: 8.7, scale: 10 },
+    { source: "imdb", score: 89, scale: 100 },
+    { source: "metacritic", score: 92, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.max],
+};
+
+const acrossTheSpiderVerse: ContentSummary = {
+  id: 569094,
+  title: "Spider-Man: Across the Spider-Verse",
+  type: "movie",
+  releaseYear: 2023,
+  tagline: "Miles Morales returns for the next chapter.",
+  synopsis:
+    "After reuniting with Gwen Stacy, Brooklyn's full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/14GEZCzCGhV7FMFaWi4Ec22Kcai.jpg",
+  moods: ["Animated", "Multiverse", "Thrilling"],
+  ratings: [
+    { source: "tmdb", score: 8.4, scale: 10 },
+    { source: "imdb", score: 87, scale: 100 },
+    { source: "metacritic", score: 86, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.netflix, defaultPlatforms.prime],
+};
+
+const fallout: ContentSummary = {
+  id: 212296,
+  title: "Fallout",
+  type: "series",
+  releaseYear: 2024,
+  tagline: "The wasteland is waiting.",
+  synopsis:
+    "200 years after the apocalypse, the gentle denizens of luxury fallout shelters are forced to return to the irradiated hellscape their ancestors left behind—and are shocked to discover an incredibly complex, gleefully weird, and highly violent universe waiting for them.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/jBoRwG3z5CXGRXfLGcMKzZnOM0.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/olxpyq9kJAZ2NU1siLrAFhKc2la.jpg",
+  moods: ["Post-apocalyptic", "Darkly funny", "Adventure"],
+  ratings: [
+    { source: "tmdb", score: 8.3, scale: 10 },
+    { source: "imdb", score: 86, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.prime],
+};
+
+const theZoneOfInterest: ContentSummary = {
+  id: 467244,
+  title: "The Zone of Interest",
+  type: "movie",
+  releaseYear: 2023,
+  tagline: "The commandant of Auschwitz dreams of a better life.",
+  synopsis:
+    "The commandant of Auschwitz strives to build a dream life for his family in a house and garden next to the camp.",
+  posterUrl: "https://image.tmdb.org/t/p/w500/mbEG3jweRDhS6KqV7d6rL3Zs3eJ.jpg",
+  backdropUrl: "https://image.tmdb.org/t/p/original/9b9hG7Et2eWhT9Jzi23GZmKQvG0.jpg",
+  moods: ["Austere", "Historical", "Unsettling"],
+  ratings: [
+    { source: "tmdb", score: 7.4, scale: 10 },
+    { source: "imdb", score: 79, scale: 100 },
+    { source: "metacritic", score: 95, scale: 100 },
+  ],
+  platforms: [defaultPlatforms.mubi, defaultPlatforms.youtube],
+};
+
 export const heroFeature: HeroFeature = {
   headline: "Stream smarter with cinematic intelligence",
   subheading: "Your personal watch strategist across every major service",
@@ -193,17 +324,67 @@ export const curatedCollections: CuratedCollection[] = [
     title: "Series to binge now",
     description: "Critically adored seasons under 10 hours.",
     highlightColor: "from-sky-400/80 to-indigo-500/60",
-    items: [theBear, shogun, loki],
+    items: [theBear, shogun, succession],
   },
 ];
 
 export const trendingMovies: ContentSummary[] = [
   dunePartTwo,
   poorThings,
-  anatomyOfAFall,
+  oppenheimer,
+  pastLives,
+  acrossTheSpiderVerse,
 ];
 
-export const trendingSeries: ContentSummary[] = [theBear, shogun, loki];
+export const trendingSeries: ContentSummary[] = [theBear, shogun, loki, fallout, succession];
+
+export const discoveryBuckets: DiscoveryBucket[] = [
+  {
+    id: "now-streaming",
+    label: "Now streaming",
+    tagline: "Fresh arrivals across Netflix, Prime Video, Disney+ and more.",
+    ctaLabel: "See the full release calendar",
+    items: [dunePartTwo, fallout, theBear, acrossTheSpiderVerse, poorThings, succession],
+  },
+  {
+    id: "coming-soon",
+    label: "Coming soon",
+    tagline: "Lock your reminders for the next wave of premieres.",
+    ctaLabel: "Add to watchlist",
+    items: [shogun, loki, dunePartTwo, oppenheimer, theBear, pastLives],
+  },
+  {
+    id: "leaving-soon",
+    label: "Leaving soon",
+    tagline: "Catch these essentials before they rotate off your services.",
+    ctaLabel: "Notify me before titles expire",
+    items: [anatomyOfAFall, theZoneOfInterest, poorThings, succession, oppenheimer, theBear],
+  },
+];
+
+export const moodSpotlights: MoodSpotlight[] = [
+  {
+    id: "cozy-night",
+    title: "Cozy night in",
+    description: "Comfort watches with warm palettes and big-hearted storytelling.",
+    gradient: "from-rose-400/80 to-amber-300/60",
+    items: [pastLives, poorThings, theBear],
+  },
+  {
+    id: "edge-of-seat",
+    title: "Edge of your seat",
+    description: "High-stakes thrillers and prestige dramas built for intensity.",
+    gradient: "from-indigo-500/80 to-sky-400/60",
+    items: [dunePartTwo, shogun, oppenheimer],
+  },
+  {
+    id: "arthouse-gems",
+    title: "Arthouse gems",
+    description: "Festival favorites and critic-approved discoveries.",
+    gradient: "from-emerald-400/80 to-cyan-400/60",
+    items: [anatomyOfAFall, theZoneOfInterest, pastLives],
+  },
+];
 
 export const criticsHighlights: CriticsHighlight[] = [
   {
@@ -222,6 +403,13 @@ export const criticsHighlights: CriticsHighlight[] = [
     icon: "https://img.icons8.com/?size=512&id=ShDkzuT1E95L&format=png",
     recommendation: theBear,
   },
+  {
+    outlet: "IndieWire",
+    quote: "A seismic work of political cinema you won't shake off.",
+    critic: "David Ehrlich",
+    icon: "https://img.icons8.com/?size=512&id=13841&format=png",
+    recommendation: theZoneOfInterest,
+  },
 ];
 
 export const serviceFilters: ServiceFilter[] = [
@@ -229,6 +417,8 @@ export const serviceFilters: ServiceFilter[] = [
   { id: "disney", label: "Disney+", category: "stream", icon: defaultPlatforms.disney.logoUrl },
   { id: "prime", label: "Prime Video", category: "stream", icon: defaultPlatforms.prime.logoUrl },
   { id: "apple", label: "Apple TV+", category: "stream", icon: defaultPlatforms.apple.logoUrl },
-  { id: "mubi", label: "MUBI", category: "stream", icon: defaultPlatforms.mubi.logoUrl },
+  { id: "mubi", label: "MUBI", category: "subscription", icon: defaultPlatforms.mubi.logoUrl },
   { id: "max", label: "Max", category: "stream", icon: defaultPlatforms.max.logoUrl },
+  { id: "youtube", label: "YouTube", category: "rent", icon: defaultPlatforms.youtube.logoUrl },
+  { id: "blutv", label: "BluTV", category: "subscription", icon: defaultPlatforms.bluTV.logoUrl },
 ];

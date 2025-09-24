@@ -8,7 +8,7 @@ export type PlatformAvailability = {
   id: string;
   name: string;
   logoUrl: string;
-  type: "stream" | "rent" | "buy" | "ad";
+  type: "stream" | "rent" | "buy" | "ad" | "subscription";
   regions: string[];
 };
 
@@ -56,4 +56,20 @@ export type HeroFeature = {
   backgroundUrl: string;
   trailerUrl: string;
   featured: ContentSummary;
+};
+
+export type DiscoveryBucket = {
+  id: string;
+  label: string;
+  tagline: string;
+  ctaLabel?: string;
+  items: ContentSummary[];
+};
+
+export type MoodSpotlight = {
+  id: string;
+  title: string;
+  description: string;
+  gradient: string;
+  items: ContentSummary[];
 };

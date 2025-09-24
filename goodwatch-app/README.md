@@ -7,8 +7,10 @@ A fresh Next.js 15 + Tailwind CSS codebase that recreates the discovery experien
 The legacy Watchy codebase was tightly coupled to a single-page search flow and relied on ad-hoc TMDB/JustWatch calls. Rather than untangling those constraints, this repo gives us a clean slate that mirrors the Goodwatch product surface:
 
 - **Hero discovery experience** that highlights one featured title, platform availability, and mood tags.
+- **Discovery radar tabs** that switch between “Now streaming”, “Coming soon”, and “Leaving soon” buckets—just like the goodwatch.app home page.
 - **Trending rails** for films and series backed by TMDB trending endpoints.
-- **Curated collections** and **critics spotlights** structured to ingest editorial datasets.
+- **Mood playlists** and **curated collections** that ingest editorial datasets and TMDB genre metadata.
+- **Critics spotlight** cards wired for Rotten Tomatoes / Metacritic pull quotes.
 - **Service filter hub** ready to plug into JustWatch country/provider switches.
 
 Use it as the foundation for a production build, or as a sandbox to validate integrations before migrating existing users.
@@ -20,6 +22,7 @@ Use it as the foundation for a production build, or as a sandbox to validate int
 - [Tailwind CSS v4](https://tailwindcss.com/) with design tokens defined in CSS
 - [TypeScript](https://www.typescriptlang.org/)
 - [clsx](https://github.com/lukeed/clsx) for ergonomic class merging
+- `server-only` typed fetchers in `src/lib/tmdb.ts` and `src/lib/justwatch.ts`
 - Turbopack dev/build commands for fast iteration
 
 ## Project structure
@@ -32,10 +35,13 @@ src/
 │  └─ globals.css     # Tailwind + design tokens
 ├─ components/
 │  ├─ layout/         # Header & footer
-│  ├─ sections/       # Hero, rails, critics, collections, filters
+│  ├─ sections/       # Hero, discovery tabs, rails, moods, critics, collections, filters
 │  └─ ui/             # Low-level UI primitives (badge, rating indicator)
 ├─ data/
 │  └─ mockContent.ts  # Sample data shaped like TMDB/JustWatch responses
+├─ lib/
+│  ├─ tmdb.ts         # Typed fetch helpers for TMDB REST API
+│  └─ justwatch.ts    # Typed GraphQL helper for JustWatch availability
 └─ types/
    └─ content.ts      # Shared domain types
 ```
@@ -70,18 +76,22 @@ When you wire up the real services, add an `.env.local` file at the project root
 TMDB_API_KEY=""
 TMDB_API_BASE_URL="https://api.themoviedb.org/3"
 JUSTWATCH_COUNTRY="TR"
+JUSTWATCH_ENDPOINT="https://apis.justwatch.com/graphql"
 NEXT_PUBLIC_DEFAULT_REGION="TR"
 ```
 
-Create typed API clients under `src/lib/` and swap the mocked data imports in `src/data/mockContent.ts` with live fetchers.
+With those values set you can swap the mocked data in `src/data/mockContent.ts` for live fetchers:
+
+- Use `getTrendingMedia`, `discoverTitles`, and `getTitleDetails` from `src/lib/tmdb.ts` inside server components or route handlers.
+- Use `fetchJustWatchAvailability` from `src/lib/justwatch.ts` to enrich titles with region/provider availability.
 
 ## Implementation roadmap
 
-1. **API layer** – build dedicated fetchers for TMDB (trending, discover, details) and JustWatch (availability by title + region).
-2. **Caching & revalidation** – leverage Next.js server actions or route handlers for deterministic caching windows.
-3. **State management** – introduce TanStack Query or server components to hydrate UI with live data.
-4. **User accounts** – integrate Supabase/Auth.js for watchlists and personalized filters.
-5. **Testing** – add Playwright smoke tests plus React Testing Library coverage for section components.
+1. **API layer** – Replace the mock exports in `src/data/mockContent.ts` with live calls from `src/lib/` fetchers and map TMDB/JustWatch payloads into the shared `ContentSummary` type.
+2. **Caching & revalidation** – Leverage Next.js server actions or route handlers for deterministic caching windows (see the `next` tags already defined in `tmdb.ts`).
+3. **State management** – Introduce TanStack Query or server components to hydrate UI with live data, preloading hero + discovery buckets on the server.
+4. **User accounts** – Integrate Supabase/Auth.js for watchlists and personalized filters.
+5. **Testing** – Add Playwright smoke tests plus React Testing Library coverage for section components.
 
 ## Deploying
 
