@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --background: #05070d;
+  --surface: #0d1017;
+  --overlay: rgba(13, 16, 23, 0.85);
+  --foreground: #f8fafc;
+  --foreground-muted: #9ea3b0;
+  --accent: #ff9f1c;
+  --accent-muted: #f7b267;
+  --accent-contrast: #05070d;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-overlay: var(--overlay);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-contrast: var(--accent-contrast);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 15% 20%, rgba(255, 159, 28, 0.05), transparent 55%),
+    radial-gradient(circle at 85% 15%, rgba(82, 99, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, #05070d 0%, #080b12 40%, #0f172a 100%);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans);
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(120deg, var(--color-accent), #ffd166 45%, #8ec5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .blur-surface {
+    background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+    backdrop-filter: blur(18px);
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

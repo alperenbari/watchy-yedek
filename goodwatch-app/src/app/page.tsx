@@ -1,0 +1,48 @@
+import { CriticsSpotlight } from "@/components/sections/CriticsSpotlight";
+import { ContentRail } from "@/components/sections/ContentRail";
+import { CuratedCollections } from "@/components/sections/CuratedCollections";
+import { DiscoveryTabs } from "@/components/sections/DiscoveryTabs";
+import { HeroShowcase } from "@/components/sections/HeroShowcase";
+import { MoodSpotlights } from "@/components/sections/MoodSpotlights";
+import { ServiceFilters } from "@/components/sections/ServiceFilters";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import {
+  criticsHighlights,
+  curatedCollections,
+  discoveryBuckets,
+  heroFeature,
+  moodSpotlights,
+  serviceFilters,
+  trendingMovies,
+  trendingSeries,
+} from "@/data/mockContent";
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen pb-20 text-white">
+      <Header />
+      <main className="mx-auto mt-16 flex w-full max-w-6xl flex-col gap-16 px-6">
+        <HeroShowcase feature={heroFeature} />
+        <DiscoveryTabs buckets={discoveryBuckets} />
+        <ContentRail
+          id="now-streaming"
+          title="Trending films"
+          description="Pulled from TMDB's daily trending endpoint with availability from JustWatch."
+          items={trendingMovies}
+        />
+        <ContentRail
+          id="series"
+          title="Trending series"
+          description="Multi-country support for where-to-watch makes follow-ups effortless."
+          items={trendingSeries}
+        />
+        <MoodSpotlights spotlights={moodSpotlights} />
+        <CuratedCollections collections={curatedCollections} />
+        <CriticsSpotlight highlights={criticsHighlights} />
+        <ServiceFilters services={serviceFilters} />
+      </main>
+      <Footer />
+    </div>
+  );
+}
